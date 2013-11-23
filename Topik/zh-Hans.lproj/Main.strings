@@ -1,0 +1,22 @@
+/* Class = "IBUITabBarItem"; title = "Featured"; ObjectID = "cff-bm-qcM"; */
+"cff-bm-qcM.title" = "特讲";
+/* Class = "IBUITabBarItem"; title = "Free"; ObjectID = "zVi-cL-wG4"; */
+"zVi-cL-wG4.title" = "免费";
+/* Class = "IBUITabBarItem"; title = "All"; ObjectID = "vRV-1J-NaQ"; */
+"vRV-1J-NaQ.title" = "全部";
+/* Class = "IBUITabBarItem"; title = "My"; ObjectID = "2Xb-1a-JzK"; */
+"2Xb-1a-JzK.title" = "我的";
+/* Class = "IBUITabBarItem"; title = "Setting"; ObjectID = "JTr-u6-LyU"; */
+"JTr-u6-LyU.title" = "设置";
+
+/* Class = "IBUIButton"; normalTitle = "Start Main"; ObjectID = "ACI-RD-gyp"; */
+"ACI-RD-gyp.normalTitle" = "Start Main";
+/* Class = "IBUIButton"; normalTitle = "Load From Server"; ObjectID = "RZS-JE-0zA"; */
+"RZS-JE-0zA.normalTitle" = "Load From Server";
+
+/* Class = "IBUINavigationItem"; title = "Root View Controller"; ObjectID = "fkr-qs-xgR"; */
+"fkr-qs-xgR.title" = "Root View Controller";
+/* Class = "IBUINavigationItem"; title = "Title"; ObjectID = "xTX-7H-r33"; */
+"xTX-7H-r33.title" = "Title";
+
+

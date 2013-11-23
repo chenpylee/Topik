@@ -14,15 +14,40 @@
 @end
 
 @implementation ViewController
-
+#pragma mark- Lifecircle
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     //[self.indicator startAnimating];
+    if(isiPhone5)
+    {
+        UIColor *background = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"splesh_568h.png"]];
+        self.view.backgroundColor = background;
+    }
+    else
+    {
+        UIColor *background = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"splesh_480h.png"]];
+        self.view.backgroundColor = background;
+    }
 }
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+#pragma mark- Button Action
+-(IBAction)loadData:(id)sender{
+    [self loadDataFromServer];
+}
+#pragma mark- Download Data
+
 - (void)loadDataFromServer{
     [self.indicator startAnimating];
+    
+    //to show:
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     //NSURL *url = [NSURL URLWithString:@"http://allseeing-i.com"];
     NSURL *url = [NSURL URLWithString:@"http://topikexam.duapp.com"];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
@@ -36,6 +61,9 @@
     NSString *responseString = [request responseString];
     NSLog(@"Data:%@",responseString);
     [self.indicator stopAnimating];
+    //to hide networkActivityIndicator:
+    //[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    //[self performSegueWithIdentifier:@"showApp" sender:self];
 }
 
 - (void)requestFailed:(ASIHTTPRequest *)request
@@ -43,13 +71,7 @@
     NSError *error = [request error];
     NSLog(@"Error:%@",error);
     [self.indicator stopAnimating];
-}
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
--(IBAction)loadData:(id)sender{
-    [self loadDataFromServer];
+    //to hide networkActivityIndicator:
+    //[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 }
 @end

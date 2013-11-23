@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#define isiPhone5  ([[UIScreen mainScreen] bounds].size.height == 568)?TRUE:FALSE
 @interface ViewController : UIViewController
 
 @end

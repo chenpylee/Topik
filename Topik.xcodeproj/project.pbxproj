@@ -12,6 +12,10 @@
 		C659661718409ADC001F0B00 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C659661618409ADC001F0B00 /* SystemConfiguration.framework */; };
 		C659661918409AEA001F0B00 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C659661818409AEA001F0B00 /* MobileCoreServices.framework */; };
 		C659661B18409B1A001F0B00 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C659661A18409B1A001F0B00 /* libz.dylib */; };
+		C66567B91840D254003BF7AB /* splesh_568h.png in Resources */ = {isa = PBXBuildFile; fileRef = C66567B71840D254003BF7AB /* splesh_568h.png */; };
+		C66567BA1840D254003BF7AB /* splesh_480h.png in Resources */ = {isa = PBXBuildFile; fileRef = C66567B81840D254003BF7AB /* splesh_480h.png */; };
+		C66567BD1840D2DD003BF7AB /* splesh_480h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C66567BB1840D2DD003BF7AB /* splesh_480h@2x.png */; };
+		C66567BE1840D2DD003BF7AB /* splesh_568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C66567BC1840D2DD003BF7AB /* splesh_568h@2x.png */; };
 		C6A68B5C1840747C007A3B63 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6A68B5B1840747C007A3B63 /* Foundation.framework */; };
 		C6A68B5E1840747C007A3B63 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6A68B5D1840747C007A3B63 /* CoreGraphics.framework */; };
 		C6A68B601840747C007A3B63 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6A68B5F1840747C007A3B63 /* UIKit.framework */; };
@@ -73,6 +77,10 @@
 		C65966221840A24F001F0B00 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		C65966231840A24F001F0B00 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		C65966241840A282001F0B00 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
+		C66567B71840D254003BF7AB /* splesh_568h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splesh_568h.png; sourceTree = "<group>"; };
+		C66567B81840D254003BF7AB /* splesh_480h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splesh_480h.png; sourceTree = "<group>"; };
+		C66567BB1840D2DD003BF7AB /* splesh_480h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "splesh_480h@2x.png"; sourceTree = "<group>"; };
+		C66567BC1840D2DD003BF7AB /* splesh_568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "splesh_568h@2x.png"; sourceTree = "<group>"; };
 		C6A68B581840747C007A3B63 /* Topik.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Topik.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6A68B5B1840747C007A3B63 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		C6A68B5D1840747C007A3B63 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -263,6 +271,10 @@
 		C6A68B92184078D6007A3B63 /* image */ = {
 			isa = PBXGroup;
 			children = (
+				C66567BB1840D2DD003BF7AB /* splesh_480h@2x.png */,
+				C66567BC1840D2DD003BF7AB /* splesh_568h@2x.png */,
+				C66567B71840D254003BF7AB /* splesh_568h.png */,
+				C66567B81840D254003BF7AB /* splesh_480h.png */,
 				C6A68B93184078D6007A3B63 /* all.png */,
 				C6A68B94184078D6007A3B63 /* all@2x.png */,
 				C6A68B95184078D6007A3B63 /* feature.png */,
@@ -391,15 +403,19 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C66567BD1840D2DD003BF7AB /* splesh_480h@2x.png in Resources */,
 				C6A68BAB18407EEF007A3B63 /* config.plist in Resources */,
 				C6A68BA0184078D6007A3B63 /* feature@2x.png in Resources */,
 				C6A68B741840747C007A3B63 /* Images.xcassets in Resources */,
 				C6A68B661840747C007A3B63 /* InfoPlist.strings in Resources */,
+				C66567BA1840D254003BF7AB /* splesh_480h.png in Resources */,
 				C6A68B9F184078D6007A3B63 /* feature.png in Resources */,
+				C66567B91840D254003BF7AB /* splesh_568h.png in Resources */,
 				C6A68B6F1840747C007A3B63 /* Main.storyboard in Resources */,
 				C6A68BA5184078D6007A3B63 /* star.png in Resources */,
 				C6A68BA1184078D6007A3B63 /* free.png in Resources */,
 				C6A68BA4184078D6007A3B63 /* setting@2x.png in Resources */,
+				C66567BE1840D2DD003BF7AB /* splesh_568h@2x.png in Resources */,
 				C6A68BA6184078D6007A3B63 /* star@2x.png in Resources */,
 				C6A68B9D184078D6007A3B63 /* all.png in Resources */,
 				C6A68BA2184078D6007A3B63 /* free@2x.png in Resources */,

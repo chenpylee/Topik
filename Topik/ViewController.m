@@ -22,12 +22,12 @@
     //[self.indicator startAnimating];
     if(isiPhone5)
     {
-        UIColor *background = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"splesh_568h.png"]];
+        UIColor *background = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"Default-568.png"]];
         self.view.backgroundColor = background;
     }
     else
     {
-        UIColor *background = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"splesh_480h.png"]];
+        UIColor *background = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"Default.png"]];
         self.view.backgroundColor = background;
     }
 }

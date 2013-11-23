@@ -14,8 +14,11 @@
 		C659661B18409B1A001F0B00 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C659661A18409B1A001F0B00 /* libz.dylib */; };
 		C66567B91840D254003BF7AB /* splesh_568h.png in Resources */ = {isa = PBXBuildFile; fileRef = C66567B71840D254003BF7AB /* splesh_568h.png */; };
 		C66567BA1840D254003BF7AB /* splesh_480h.png in Resources */ = {isa = PBXBuildFile; fileRef = C66567B81840D254003BF7AB /* splesh_480h.png */; };
-		C66567BD1840D2DD003BF7AB /* splesh_480h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C66567BB1840D2DD003BF7AB /* splesh_480h@2x.png */; };
-		C66567BE1840D2DD003BF7AB /* splesh_568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C66567BC1840D2DD003BF7AB /* splesh_568h@2x.png */; };
+		C66567C61840D86B003BF7AB /* App_ICON58.png in Resources */ = {isa = PBXBuildFile; fileRef = C66567C31840D86B003BF7AB /* App_ICON58.png */; };
+		C66567C71840D86B003BF7AB /* App_ICON80.png in Resources */ = {isa = PBXBuildFile; fileRef = C66567C41840D86B003BF7AB /* App_ICON80.png */; };
+		C66567C81840D86B003BF7AB /* App_ICON120.png in Resources */ = {isa = PBXBuildFile; fileRef = C66567C51840D86B003BF7AB /* App_ICON120.png */; };
+		C66567CC1840DD53003BF7AB /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C66567CE1840DD53003BF7AB /* Default@2x.png */; };
+		C66567D01840DDBC003BF7AB /* Default-568@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C66567D21840DDBC003BF7AB /* Default-568@2x.png */; };
 		C6A68B5C1840747C007A3B63 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6A68B5B1840747C007A3B63 /* Foundation.framework */; };
 		C6A68B5E1840747C007A3B63 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6A68B5D1840747C007A3B63 /* CoreGraphics.framework */; };
 		C6A68B601840747C007A3B63 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6A68B5F1840747C007A3B63 /* UIKit.framework */; };
@@ -79,8 +82,13 @@
 		C65966241840A282001F0B00 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
 		C66567B71840D254003BF7AB /* splesh_568h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splesh_568h.png; sourceTree = "<group>"; };
 		C66567B81840D254003BF7AB /* splesh_480h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splesh_480h.png; sourceTree = "<group>"; };
-		C66567BB1840D2DD003BF7AB /* splesh_480h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "splesh_480h@2x.png"; sourceTree = "<group>"; };
-		C66567BC1840D2DD003BF7AB /* splesh_568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "splesh_568h@2x.png"; sourceTree = "<group>"; };
+		C66567C31840D86B003BF7AB /* App_ICON58.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = App_ICON58.png; sourceTree = "<group>"; };
+		C66567C41840D86B003BF7AB /* App_ICON80.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = App_ICON80.png; sourceTree = "<group>"; };
+		C66567C51840D86B003BF7AB /* App_ICON120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = App_ICON120.png; sourceTree = "<group>"; };
+		C66567CD1840DD53003BF7AB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file; name = Base; path = "Base.lproj/Default@2x.png"; sourceTree = "<group>"; };
+		C66567CF1840DD5E003BF7AB /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = file; name = "zh-Hans"; path = "zh-Hans.lproj/Default@2x.png"; sourceTree = "<group>"; };
+		C66567D11840DDBC003BF7AB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file; name = Base; path = "Base.lproj/Default-568@2x.png"; sourceTree = "<group>"; };
+		C66567D31840DDC7003BF7AB /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = file; name = "zh-Hans"; path = "zh-Hans.lproj/Default-568@2x.png"; sourceTree = "<group>"; };
 		C6A68B581840747C007A3B63 /* Topik.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Topik.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6A68B5B1840747C007A3B63 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		C6A68B5D1840747C007A3B63 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -271,8 +279,11 @@
 		C6A68B92184078D6007A3B63 /* image */ = {
 			isa = PBXGroup;
 			children = (
-				C66567BB1840D2DD003BF7AB /* splesh_480h@2x.png */,
-				C66567BC1840D2DD003BF7AB /* splesh_568h@2x.png */,
+				C66567D21840DDBC003BF7AB /* Default-568@2x.png */,
+				C66567C31840D86B003BF7AB /* App_ICON58.png */,
+				C66567C41840D86B003BF7AB /* App_ICON80.png */,
+				C66567C51840D86B003BF7AB /* App_ICON120.png */,
+				C66567CE1840DD53003BF7AB /* Default@2x.png */,
 				C66567B71840D254003BF7AB /* splesh_568h.png */,
 				C66567B81840D254003BF7AB /* splesh_480h.png */,
 				C6A68B93184078D6007A3B63 /* all.png */,
@@ -403,19 +414,22 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C66567BD1840D2DD003BF7AB /* splesh_480h@2x.png in Resources */,
+				C66567CC1840DD53003BF7AB /* Default@2x.png in Resources */,
 				C6A68BAB18407EEF007A3B63 /* config.plist in Resources */,
 				C6A68BA0184078D6007A3B63 /* feature@2x.png in Resources */,
 				C6A68B741840747C007A3B63 /* Images.xcassets in Resources */,
 				C6A68B661840747C007A3B63 /* InfoPlist.strings in Resources */,
 				C66567BA1840D254003BF7AB /* splesh_480h.png in Resources */,
 				C6A68B9F184078D6007A3B63 /* feature.png in Resources */,
+				C66567C81840D86B003BF7AB /* App_ICON120.png in Resources */,
 				C66567B91840D254003BF7AB /* splesh_568h.png in Resources */,
+				C66567D01840DDBC003BF7AB /* Default-568@2x.png in Resources */,
 				C6A68B6F1840747C007A3B63 /* Main.storyboard in Resources */,
+				C66567C61840D86B003BF7AB /* App_ICON58.png in Resources */,
 				C6A68BA5184078D6007A3B63 /* star.png in Resources */,
 				C6A68BA1184078D6007A3B63 /* free.png in Resources */,
 				C6A68BA4184078D6007A3B63 /* setting@2x.png in Resources */,
-				C66567BE1840D2DD003BF7AB /* splesh_568h@2x.png in Resources */,
+				C66567C71840D86B003BF7AB /* App_ICON80.png in Resources */,
 				C6A68BA6184078D6007A3B63 /* star@2x.png in Resources */,
 				C6A68B9D184078D6007A3B63 /* all.png in Resources */,
 				C6A68BA2184078D6007A3B63 /* free@2x.png in Resources */,
@@ -477,6 +491,24 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		C66567CE1840DD53003BF7AB /* Default@2x.png */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C66567CD1840DD53003BF7AB /* Base */,
+				C66567CF1840DD5E003BF7AB /* zh-Hans */,
+			);
+			name = "Default@2x.png";
+			sourceTree = "<group>";
+		};
+		C66567D21840DDBC003BF7AB /* Default-568@2x.png */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C66567D11840DDBC003BF7AB /* Base */,
+				C66567D31840DDC7003BF7AB /* zh-Hans */,
+			);
+			name = "Default-568@2x.png";
+			sourceTree = "<group>";
+		};
 		C6A68B641840747C007A3B63 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -593,8 +625,6 @@
 		C6A68B8B1840747C007A3B63 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Topik/Topik-Prefix.pch";
 				INFOPLIST_FILE = "Topik/Topik-Info.plist";
@@ -606,8 +636,6 @@
 		C6A68B8C1840747C007A3B63 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Topik/Topik-Prefix.pch";
 				INFOPLIST_FILE = "Topik/Topik-Info.plist";

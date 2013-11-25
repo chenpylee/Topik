@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#define isiPhone5  ([[UIScreen mainScreen] bounds].size.height == 568)?TRUE:FALSE
 @interface AppConfig : NSObject
 +(UIColor*)getTabBarTintColor;
++(NSString*)getFullDataUrl;
 @end

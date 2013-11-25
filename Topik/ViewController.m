@@ -8,6 +8,9 @@
 
 #import "ViewController.h"
 #import "ASIHTTPRequest.h"
+#import "AppConfig.h"
+#import "RemoteData.h"
+
 @interface ViewController ()
 @property IBOutlet UIActivityIndicatorView* indicator;
 -(IBAction) loadData:(id)sender;
@@ -46,6 +49,14 @@
 - (void)loadDataFromServer{
     [self.indicator startAnimating];
     
+    NSString *urlString=[AppConfig getFullDataUrl];
+    NSURL *url = [NSURL URLWithString:urlString];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    [request setDelegate:self];
+    [request startAsynchronous];
+    NSLog(@"--------------------------------------------------");
+    NSLog(@"Start Downloading from %@...",[url absoluteString]);
+    /**
     //to show:
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     //NSURL *url = [NSURL URLWithString:@"http://allseeing-i.com"];
@@ -54,12 +65,15 @@
     [request setDelegate:self];
     [request startAsynchronous];
     NSLog(@"Start Downloading fro %@...",[url absoluteString]);
+     **/
 }
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
     // Use when fetching text data
-    NSString *responseString = [request responseString];
-    NSLog(@"Data:%@",responseString);
+    //NSString *responseString = [request responseString];
+    NSData *responseData=[request responseData];
+    [self parseData:responseData];
+    
     [self.indicator stopAnimating];
     //to hide networkActivityIndicator:
     //[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
@@ -73,5 +87,9 @@
     [self.indicator stopAnimating];
     //to hide networkActivityIndicator:
     //[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+}
+#pragma mark- parse Json data
+- (void)parseData:(NSData *)responseData {
+    [RemoteData processTotalJsonData:responseData];
 }
 @end

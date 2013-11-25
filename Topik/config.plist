@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>fullDataUrl</key>
+	<string>http://topikexam.duapp.com/api/0/loadall.php</string>
+	<key>apiVersion</key>
+	<string>0</string>
 	<key>tabBarTintColor</key>
 	<string>3498db</string>
 </dict>

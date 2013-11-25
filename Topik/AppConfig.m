@@ -16,6 +16,11 @@
     tintColor=[AppConfig getUIColorObjectFromHexString:colorHex alpha:1.0];
     return tintColor;
 }
++(NSString*)getFullDataUrl{
+    NSString *url=(NSString*)[[AppConfig sharedSettings] objectForKey:@"fullDataUrl"];
+    NSLog(@"AppConfig getFullDataUrl:%@",url);
+    return url;
+}
 +(NSDictionary*)sharedSettings{
     static NSDictionary *_settings;
     static dispatch_once_t once_mark;

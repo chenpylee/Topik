@@ -13,6 +13,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    NSLog(@"Appliction didFinishLaunchingWithOptions");
+    [self checkAndUpdateDatabse];
     return YES;
 }
 							
@@ -41,6 +43,46 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+#pragma mark- Database Preparation
+- (void)checkAndUpdateDatabse{
+    /** Before accessing resource file, should CopyBundleResources and add the target resources
+    NSString *dbPath=[[NSBundle mainBundle] pathForResource:@"LectureDB" ofType:@"sqlite"];
+    NSLog(@"DB Path in Resource:%@",path);
+     **/
+    NSError *error;
+    BOOL success;
+    NSFileManager *fileManager=[NSFileManager defaultManager];
+    NSArray *documentPaths=NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);//NSUserDomainMask: user's home directory --- place to install user's personal items (~)
+    NSString *documentsDirectory = [documentPaths objectAtIndex:0];
+    NSString *appDBPath=[documentsDirectory stringByAppendingString:@"/LectureDB.sqlite"];
+    success=[fileManager fileExistsAtPath:appDBPath];
+    if(!success)
+    {
+        NSString *defaultDBPath = [[NSBundle mainBundle] pathForResource:@"LectureDB" ofType:@"sqlite"];
+        NSLog(@"DB Path in Resource:%@",defaultDBPath);
+        if(defaultDBPath!=NULL)
+        {
+            success = [fileManager copyItemAtPath:defaultDBPath toPath:appDBPath error:&error];
+            if (!success) {
+                NSLog(@"Failed to create writable database file with message '%@'.", [error localizedDescription]);
+            }
+            else
+            {
+                NSLog(@"Successed to create writable data file from %@ to %@",defaultDBPath,appDBPath);
+            }
+        }
+    }
+    else
+    {
+        NSLog(@"File Exists:%@ No need to create again.",appDBPath);
+    }
+
+    
+    
+
+    
 }
 
 @end

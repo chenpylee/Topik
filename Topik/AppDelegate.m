@@ -14,6 +14,7 @@
 {
     // Override point for customization after application launch.
     NSLog(@"Appliction didFinishLaunchingWithOptions");
+    self.needLanspace=FALSE;
     [self checkAndUpdateDatabse];
     return YES;
 }
@@ -78,11 +79,28 @@
     {
         NSLog(@"File Exists:%@ No need to create again.",appDBPath);
     }
-
     
+}
+- (NSUInteger)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
     
-
-    
+    //id presentedViewController = [window.rootViewController presentedViewController];
+    //NSString *className = presentedViewController ? NSStringFromClass([presentedViewController class]) : nil;
+    /**
+    if (window && [className isEqualToString:@"MPInlineVideoFullscreenViewController"]) {
+        return UIInterfaceOrientationMaskAll;
+    } else {
+        return UIInterfaceOrientationMaskPortrait;
+    }
+     **/
+    NSLog(@"Orientation: needLandscape:%d",self.needLanspace);
+    if(self.needLanspace)
+    {
+        return UIInterfaceOrientationMaskAll;
+    }
+    else
+    {
+        return UIInterfaceOrientationMaskPortrait;
+    }
 }
 
 @end

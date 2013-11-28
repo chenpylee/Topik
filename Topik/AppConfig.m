@@ -16,6 +16,34 @@
     tintColor=[AppConfig getUIColorObjectFromHexString:colorHex alpha:1.0];
     return tintColor;
 }
++(UIColor*)getLevelColor1{
+    UIColor* levelColor=nil;
+    NSString *colorHex=(NSString*)[[AppConfig sharedSettings] objectForKey:@"levelColor1"];
+    NSLog(@"levelColor1 from Plist:%@",colorHex);
+    levelColor=[AppConfig getUIColorObjectFromHexString:colorHex alpha:1.0];
+    return levelColor;
+}
++(UIColor*)getLevelColor2{
+    UIColor* levelColor=nil;
+    NSString *colorHex=(NSString*)[[AppConfig sharedSettings] objectForKey:@"levelColor2"];
+    NSLog(@"levelColor2 from Plist:%@",colorHex);
+    levelColor=[AppConfig getUIColorObjectFromHexString:colorHex alpha:1.0];
+    return levelColor;
+}
++(UIColor*)getLevelColor3{
+    UIColor* levelColor=nil;
+    NSString *colorHex=(NSString*)[[AppConfig sharedSettings] objectForKey:@"levelColor3"];
+    NSLog(@"levelColor3 from Plist:%@",colorHex);
+    levelColor=[AppConfig getUIColorObjectFromHexString:colorHex alpha:1.0];
+    return levelColor;
+}
++(UIColor*)getLevelColor4{
+    UIColor* levelColor=nil;
+    NSString *colorHex=(NSString*)[[AppConfig sharedSettings] objectForKey:@"levelColor4"];
+    NSLog(@"levelColor4 from Plist:%@",colorHex);
+    levelColor=[AppConfig getUIColorObjectFromHexString:colorHex alpha:1.0];
+    return levelColor;
+}
 +(NSString*)getFullDataUrl{
     NSString *url=(NSString*)[[AppConfig sharedSettings] objectForKey:@"fullDataUrl"];
     NSLog(@"AppConfig getFullDataUrl:%@",url);
@@ -59,5 +87,9 @@
     [scanner scanHexInt:&hexInt];
     
     return hexInt;
+}
++(BOOL)isPaidVersion{
+    BOOL isPaid=TRUE;
+    return isPaid;
 }
 @end

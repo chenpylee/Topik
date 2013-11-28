@@ -12,4 +12,5 @@
 #import "FMResultSet.h"
 @interface RemoteData : NSObject
 +(BOOL)processTotalJsonData:(NSData *)data;
++(NSMutableArray *)loadFeaturedLecturesToArray;
 @end

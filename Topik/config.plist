@@ -2,6 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>levelColor4</key>
+	<string>e74c3c</string>
+	<key>levelColor3</key>
+	<string>3498db</string>
+	<key>levelColor2</key>
+	<string>1abc9c </string>
+	<key>levelColor1</key>
+	<string>e67e22</string>
 	<key>fullDataUrl</key>
 	<string>http://topikexam.duapp.com/api/0/loadall.php</string>
 	<key>apiVersion</key>

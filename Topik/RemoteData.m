@@ -13,7 +13,11 @@
 #import "LectureSample.h"
 #import "LectureBasic.h"
 #import "LectureVideo.h"
+#import "FeaturedLecture.h"
+#import "AppConfig.h"
+#import "ASIHTTPRequest.h"
 @implementation RemoteData
+
 +(BOOL)processTotalJsonData:(NSData *)responseData
 {
     NSError* error=nil;
@@ -353,8 +357,112 @@
         }
         
         processSuccess=true;
+        [[NSNotificationCenter defaultCenter]postNotificationName:APP_NOTIFICATION_TOTAL_DATA_LOADED object:nil];
         return processSuccess;
     }
 }
++(NSMutableArray*)loadFeaturedLecturesToArray{
+    NSMutableArray *featuredLectures=[[NSMutableArray alloc] init];
+    NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsPath = [paths objectAtIndex:0];
+    NSString *dbPath = [docsPath stringByAppendingPathComponent:@"LectureDB.sqlite"];
+    NSLog(@"dbPath:%@",dbPath);
+    FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
+    if (![db open]) {
+        NSLog(@"Could not open db. when loadFeaturedLecturesToArray");
+    }
+    else
+    {
+        FMResultSet *s = [db executeQuery:@"SELECT * FROM topik_lecture_basic"];
+        while ([s next]) {
+            int lecture_id=[s intForColumn:@"lecture_id"];
+            NSString *lecture_title=[s stringForColumn:@"lecture_title"];
+            int lecture_lang=[s intForColumn:@"lecture_lang"];
+            int lecture_type=[s intForColumn:@"lecture_type"];
+            int lecture_level=[s intForColumn:@"lecture_level"];
+            int lecture_exam=[s intForColumn:@"lecture_exam"];
+            int lecture_status=[s intForColumn:@"lecture_status"];
+            NSString *lecture_created=[s stringForColumn:@"lecture_created"];
+            NSString *lecture_updated=[s stringForColumn:@"lecture_updated"];
+            LectureBasic *basic=[[LectureBasic alloc] initWithId:lecture_id title:lecture_title lang:lecture_lang type:lecture_type level:lecture_level exam:lecture_exam status:lecture_status created:lecture_created updated:lecture_updated];
+            NSLog(@"loadFeaturedLecturesToArray-topik_lecture_basic: lecture_id=%d, lecture_title=%@, lecture_lang=%d,  lecture_type=%d, lecture_level=%d, lecture_exam=%d, lecture_status=%d,lecture_created=%@, lecture_updated=%@,",lecture_id,lecture_title,lecture_lang,lecture_type,lecture_level,lecture_exam,lecture_status,lecture_created,lecture_updated);
+            LectureSample *sample=[RemoteData getLectureSampleFromDbByLectureId:lecture_id];
+            NSMutableArray *videos=[RemoteData getLectureVideosFromDbByLectureId:lecture_id];
+            FeaturedLecture *featuredLecture=[[FeaturedLecture alloc] initWithBasic:basic sample:sample videos:videos];
+            [featuredLectures addObject:featuredLecture];
+        }
 
+    }
+    [db close];
+    return featuredLectures;
+}
++(LectureSample *)getLectureSampleFromDbByLectureId:(NSInteger)lecture_id
+{
+    LectureSample *sample=nil;
+    NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsPath = [paths objectAtIndex:0];
+    NSString *dbPath = [docsPath stringByAppendingPathComponent:@"LectureDB.sqlite"];
+    NSLog(@"dbPath:%@",dbPath);
+    FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
+    if (![db open]) {
+        NSLog(@"Could not open db. when loadFeaturedLecturesToArray");
+    }
+    else
+    {
+        //print out sample video information
+        //TABLE topik_lecture_sample(sv_id integer,lecture_id integer,sv_url text,sv_host text,sv_vid text,sv_img text);
+         FMResultSet *s = [db executeQuery:[NSString stringWithFormat:@"SELECT * FROM topik_lecture_sample WHERE lecture_id=%d",lecture_id]];
+        if ([s next]) {
+            int sv_id=[s intForColumn:@"sv_id"];
+            int lecture_id=[s intForColumn:@"lecture_id"];
+            NSString *sv_url=[s stringForColumn:@"sv_url"];
+            NSString *sv_host=[s stringForColumn:@"sv_host"];
+            NSString *sv_vid=[s stringForColumn:@"sv_vid"];
+            NSString *sv_img=[s stringForColumn:@"sv_img"];
+            NSLog(@" getLectureSampleFromDbByLectureId topik_lecture_sample: sv_id=%d, lecture_id=%d,sv_url=%@, sv_host=%@,  sv_vid=%@,sv_img=%@",sv_id,lecture_id,sv_url,sv_host,sv_vid,sv_img);
+            if(sv_id>0)
+            {
+                sample=[[LectureSample alloc] initWithId:sv_id lecture:lecture_id url:sv_url host:sv_host vid:sv_vid imgUrl:sv_img];
+            }
+        }
+
+    }
+    [db close];
+
+    return sample;
+}
++(NSMutableArray *)getLectureVideosFromDbByLectureId:(NSInteger)lecture_id
+{
+    NSMutableArray *videos=[[NSMutableArray alloc] init];
+    NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsPath = [paths objectAtIndex:0];
+    NSString *dbPath = [docsPath stringByAppendingPathComponent:@"LectureDB.sqlite"];
+    NSLog(@"dbPath:%@",dbPath);
+    FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
+    if (![db open]) {
+        NSLog(@"Could not open db. when loadFeaturedLecturesToArray");
+    }
+    else
+    {
+        //print out sample video information
+        //TABLE topik_lecture_sample(sv_id integer,lecture_id integer,sv_url text,sv_host text,sv_vid text,sv_img text);
+        NSString *query=[NSString stringWithFormat:@"SELECT * FROM topik_lecture_video WHERE lecture_id=%d",lecture_id];
+        FMResultSet *s = [db executeQuery:query];
+        while ([s next]) {
+            int video_id=[s intForColumn:@"video_id"];
+            int lecture_id=[s intForColumn:@"lecture_id"];
+            int video_sequence=[s intForColumn:@"video_sequence"];
+            NSString *video_file=[s stringForColumn:@"video_file"];
+            NSString *video_name=[s stringForColumn:@"video_name"];
+            
+            NSLog(@"getLectureVideosFromDbByLectureId-topik_lecture_video: video_id=%d, lecture_id=%d,video_file=%@, video_name=%@,  video_sequence=%d",video_id,lecture_id,video_file,video_name,video_sequence);
+            LectureVideo *video=[[LectureVideo alloc] initWIthId:video_id lecture:lecture_id fileUrl:video_file name:video_name sequence:video_sequence];
+            [videos addObject:video];
+        }
+        
+    }
+    [db close];
+
+    return videos;
+}
 @end

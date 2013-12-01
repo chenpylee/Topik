@@ -7,9 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "Reachability.h"
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
-
+{
+    Reachability *internetReach;
+}
 @property (strong, nonatomic) UIWindow *window;
 @property (nonatomic,assign)BOOL needLanspace;
 @end

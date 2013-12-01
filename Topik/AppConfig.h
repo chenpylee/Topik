@@ -17,4 +17,5 @@
 +(UIColor*)getLevelColor4;
 +(NSString*)getFullDataUrl;
 +(BOOL)isPaidVersion;
++(NSString*)getCurrentDateTime;
 @end

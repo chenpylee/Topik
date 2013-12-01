@@ -10,7 +10,24 @@
 #import "FMDatabase.h"
 #import "FMDatabaseQueue.h"
 #import "FMResultSet.h"
+#import "FeaturedLecture.h"
+#import "LectureVideo.h"
+#import "DownloadListData.h"
+#import "DownloadLecture.h"
 @interface RemoteData : NSObject
 +(BOOL)processTotalJsonData:(NSData *)data;
 +(NSMutableArray *)loadFeaturedLecturesToArray;
++(void)InsertFeaturedLectureBookmark:(FeaturedLecture*)featuredLecture;
++(BOOL)FeaturedLectureExistsInBookmark:(FeaturedLecture*)featuredLecture;
++(void)RemoveFeaturedLectureFromBookmark:(FeaturedLecture*)featuredLecture;
++(void)InsertFeaturedLectureVideoDownload:(FeaturedLecture*)featuredLecture;
++(BOOL)FeaturedLectureExistInDownload:(FeaturedLecture*)lecture;
++(void)RemoveFeaturedLectureFromDownload:(FeaturedLecture*)featuredLecture;
++(BOOL)LectureVideoExistInDownload:(LectureVideo*)video;
++(BOOL)VideoExistInDownload:(NSInteger)videoId;
++(void)InsertSingleFeaturedLectureVideoDownload:(FeaturedLecture*)featuredLecture indexAt:(NSInteger)videoIndex;
++(void)InsertSingleDowloadVideoDownload:(DownloadLecture*)downloadVideo;
++(void)RemoveLectureVideoFromDownload:(LectureVideo*)video;
++(void)RemoveVideoFromDownloadByVideoId:(NSInteger)videoId;
++(DownloadListData *)loadDownloadListData;
 @end

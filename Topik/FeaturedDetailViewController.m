@@ -13,17 +13,19 @@
 #import "LandscapeSupportedMPMoviePlayerController.h"
 #import "LectureVideo.h"
 #import "FeaturedPlaylistCell.h"
+#import "BookmarkLecture.h"
+#import "RemoteData.h"
+#import "FeaturedVideoDetailViewController.h"
 @interface FeaturedDetailViewController ()
 {
     MPMoviePlayerViewController *player;
     __weak IBOutlet UILabel *previewLabel;
     __weak IBOutlet UILabel *titleLabel;
-    __weak IBOutlet UIButton *downloadButton;
-    __weak IBOutlet UIButton *bookmarkButton;
     __weak IBOutlet UILabel *playlistLabel;
     __weak IBOutlet UITableView *playlistTableView;
 }
 @property (weak, nonatomic) IBOutlet UIView *videoSuper;
+@property (nonatomic,assign) NSInteger selectedVideoIndex;
 @end
 
 @implementation FeaturedDetailViewController
@@ -54,17 +56,35 @@
     playlistTableView.dataSource=self;
     playlistTableView.delegate=self;
 	// Do any additional setup after loading the view.
+    [self updateBookmarkButton];
+    [self updateDownloadButton];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
+    [self updateDownloadButton];
+    [self updateBookmarkButton];
     NSString *sampleUrlString=[NSString stringWithFormat:@"http://v.youku.com/player/getRealM3U8/vid/%@/type/video.m3u8",self.lecture.sample.sv_vid];
     NSLog(@"FeaturedDetail:vid:%@",self.lecture.sample.sv_vid);
    [self parepareVideo:sampleUrlString];
+    
 }
 - (void)didReceiveMemoryWaning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+// In a story board-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+    NSLog(@"Prepare for %@",segue.identifier);
+    if ([[segue identifier] isEqualToString:@"FeaturedVideoDetailSegue"])
+    {
+        FeaturedVideoDetailViewController *videoController=[segue destinationViewController];
+        videoController.lecture=self.lecture;
+        videoController.videoIndex=self.selectedVideoIndex;
+    }
 }
 #pragma mark- Video Playing and Fullscreen Landscape
 -(void)parepareVideo:(NSString*)videoUrlString{
@@ -87,12 +107,16 @@
                                               selector:@selector(willEnterFullScreen:)
                                                   name:MPMoviePlayerWillEnterFullscreenNotification
                                                 object:nil];
-     [self.videoSuper addSubview:player.moviePlayer.view];
      //[movie play];
      [[NSNotificationCenter defaultCenter] addObserver:self
                                               selector:@selector(willExitFullScreen:)
                                                   name:MPMoviePlayerWillExitFullscreenNotification
                                                 object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(willExitFullScreen:)
+                                                 name:MPMoviePlayerPlaybackDidFinishNotification
+                                               object:nil];
 }
 
 -(void)willEnterFullScreen:(NSNotification*)aNotification{
@@ -132,11 +156,94 @@
     LectureVideo* video=self.lecture.videos[indexPath.row];
     NSString *titleText=video.video_name;
     //NSString *status=NSLocalizedstring}
-    NSString *subTitleText=@"Downloading..";
+    NSString *subTitleText=@"Waiting for downloading..";
     cell.videoNameLabel.text=titleText;
     cell.videoStatusLabel.text=subTitleText;
     //cell.textLabel.text=titleText;
     //cell.statu.text=subTitleText;
     return cell;
 }
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    self.selectedVideoIndex=indexPath.row;
+    [self performSegueWithIdentifier:@"FeaturedVideoDetailSegue" sender:self];
+}
+- (IBAction)updateBookmark:(id)sender {
+    [self insertBookMark:self.lecture];
+}
+
+- (IBAction)updateDownload:(id)sender {
+    [self insertDownload:self.lecture];
+}
+
+-(void)insertBookMark:(FeaturedLecture *)lecture{
+    if(![RemoteData FeaturedLectureExistsInBookmark:self.lecture])
+    {
+        [RemoteData InsertFeaturedLectureBookmark:lecture ];
+        
+    }
+    else
+    {
+        [RemoteData RemoveFeaturedLectureFromBookmark:lecture];
+        
+    }
+    [self updateBookmarkButton];
+}
+-(void)insertDownload:(FeaturedLecture*)lecture{
+    if(![RemoteData FeaturedLectureExistInDownload:self.lecture])
+    {
+        UIAlertView* addAlert=[[UIAlertView alloc] initWithTitle:@"Download" message:@"Do you want to download all the videos of this lecture?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Download All", nil];
+        addAlert.tag=10;
+        [addAlert show];
+        
+    }
+    else
+    {
+        UIAlertView* addAlert=[[UIAlertView alloc] initWithTitle:@"Download Lecture" message:@"You can download or remove videos of this lecture" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Download All",@"Remove All", nil];
+        addAlert.tag=11;
+        [addAlert show];
+        
+    }
+}
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSLog(@"Alert Tag=%d, button index=%d",alertView.tag,buttonIndex);
+    if(alertView.tag==10)
+    {
+        switch(buttonIndex)
+        {
+            case 0:
+                return;
+                break;
+            case 1:
+                [RemoteData InsertFeaturedLectureVideoDownload:self.lecture];
+                break;
+            default:
+                return;
+                break;
+        }
+    }
+    if(alertView.tag==11)
+    {
+        switch(buttonIndex)
+        {
+            case 0:
+                return;
+                break;
+            case 1:
+                [RemoteData InsertFeaturedLectureVideoDownload:self.lecture];
+                break;
+            default:
+                [RemoteData RemoveFeaturedLectureFromDownload:self.lecture];
+                break;
+        }
+    }
+    [self updateDownloadButton];
+}
+-(void)updateBookmarkButton{
+    self.bookmarkButton.selected=[RemoteData FeaturedLectureExistsInBookmark:self.lecture];
+}
+-(void)updateDownloadButton{
+    self.downloadButton.selected=[RemoteData FeaturedLectureExistInDownload:self.lecture];
+}
+
 @end

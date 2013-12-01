@@ -92,4 +92,13 @@
     BOOL isPaid=TRUE;
     return isPaid;
 }
++(NSString*)getCurrentDateTime{
+    NSDate *newDate;
+    NSDateComponents *dateComponents = [[NSCalendar currentCalendar] components:~ NSTimeZoneCalendarUnit fromDate:[NSDate date]];
+    
+    newDate = [[NSCalendar currentCalendar] dateFromComponents:dateComponents];
+    NSLog(@"newDate: %@", newDate);
+    NSLog(@"newDate: %.0f", [newDate timeIntervalSinceReferenceDate]);
+    return [NSString stringWithFormat:@"%@",newDate];
+}
 @end

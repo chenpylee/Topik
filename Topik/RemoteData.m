@@ -16,6 +16,8 @@
 #import "FeaturedLecture.h"
 #import "AppConfig.h"
 #import "ASIHTTPRequest.h"
+#import "BookmarkLecture.h"
+#import "DownloadLecture.h"
 @implementation RemoteData
 
 +(BOOL)processTotalJsonData:(NSData *)responseData
@@ -464,5 +466,494 @@
     [db close];
 
     return videos;
+}
++(void)InsertFeaturedLectureBookmark:(FeaturedLecture*)featuredLecture{
+    /**
+     CREATE TABLE topik_bookmark(bm_id integer,lecture_id integer, is_paid integer, lecture_title text,lecture_img text, video_count integer,bm_created text);
+     **/
+    BookmarkLecture *bookmark=[[BookmarkLecture alloc] initWithFeaturedLecture:featuredLecture];
+    NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsPath = [paths objectAtIndex:0];
+    NSString *dbPath = [docsPath stringByAppendingPathComponent:@"LectureDB.sqlite"];
+    NSLog(@"dbPath:%@",dbPath);
+    FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
+    if (![db open]) {
+        NSLog(@"Could not open db.");
+    }
+    else
+    {
+        NSString *query=[NSString stringWithFormat:@"SELECT * FROM topik_bookmark WHERE lecture_id=%d AND is_paid=1",featuredLecture.lecture_id];
+        FMResultSet *s = [db executeQuery:query];
+        BOOL isExist=FALSE;
+        while ([s next]) {
+            NSInteger bookmark_id=[s intForColumn:@"bm_id"];
+            NSInteger lecture_id=[s intForColumn:@"lecture_id"];
+            NSInteger is_paid_int=[s intForColumn:@"is_paid"];
+            BOOL is_paid=FALSE;
+            if(is_paid_int==1)
+            {
+                is_paid=TRUE;
+            }
+            NSString *lecture_title=[s stringForColumn:@"lecture_title"];
+            NSString *lecture_img=[s stringForColumn:@"lecture_img"];
+            NSInteger video_count=[s intForColumn:@"video_count"];
+            NSString *bm_created=[s stringForColumn:@"bm_created"];
+            
+            NSLog(@"EXIST: topik_bookmark: bookmark_id=%d, lecture_id=%d,is_paid_int=%d, lecture_title=%@,  lecture_img=%@, video_count=%d, bm_created=%@",bookmark_id,lecture_id,is_paid_int,lecture_title,lecture_img,video_count,bm_created);
+            isExist=TRUE;
+        }
+        if(isExist)
+            return;
+
+        [db executeUpdate:@"INSERT INTO topik_bookmark(lecture_id,is_paid,lecture_title,lecture_img,video_count,bm_created) VALUES (?,?,?,?,?,?)",
+         [NSNumber numberWithInt:bookmark.lecture_id],
+         [NSNumber numberWithInt:1],
+         bookmark.lecture_title,
+         bookmark.lecture_img,
+         [NSNumber numberWithInt:bookmark.video_count],
+         bookmark.bm_created
+         ];
+        if ([db hadError]) {
+            NSLog(@"INSERT INTO Table:%@ Err %d: %@", @"topik_bookmark",[db lastErrorCode], [db lastErrorMessage]);
+        }
+        
+        //print out result
+        query=@"SELECT * FROM topik_bookmark";
+        s = [db executeQuery:query];
+        while ([s next]) {
+            NSInteger bookmark_id=[s intForColumn:@"bm_id"];
+            NSInteger lecture_id=[s intForColumn:@"lecture_id"];
+            NSInteger is_paid_int=[s intForColumn:@"is_paid"];
+            BOOL is_paid=FALSE;
+            if(is_paid_int==1)
+            {
+                is_paid=TRUE;
+            }
+            NSString *lecture_title=[s stringForColumn:@"lecture_title"];
+            NSString *lecture_img=[s stringForColumn:@"lecture_img"];
+            NSInteger video_count=[s intForColumn:@"video_count"];
+            NSString *bm_created=[s stringForColumn:@"bm_created"];
+            
+            NSLog(@"topik_bookmark: bookmark_id=%d, lecture_id=%d,is_paid_int=%d, lecture_title=%@,  lecture_img=%@, video_count=%d, bm_created=%@",bookmark_id,lecture_id,is_paid_int,lecture_title,lecture_img,video_count,bm_created);
+        }
+
+    }
+    [db close];
+}
++(BOOL)FeaturedLectureExistsInBookmark:(FeaturedLecture*)featuredLecture{
+    BOOL isExist=FALSE;
+    NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsPath = [paths objectAtIndex:0];
+    NSString *dbPath = [docsPath stringByAppendingPathComponent:@"LectureDB.sqlite"];
+    NSLog(@"dbPath:%@",dbPath);
+    FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
+    if (![db open]) {
+        NSLog(@"Could not open db.");
+    }
+    else
+    {
+        
+        NSString *query=[NSString stringWithFormat:@"SELECT * FROM topik_bookmark WHERE lecture_id=%d AND is_paid=1",featuredLecture.lecture_id];
+        FMResultSet *s = [db executeQuery:query];
+        while ([s next]) {
+            NSInteger is_paid_int=[s intForColumn:@"is_paid"];
+            BOOL is_paid=FALSE;
+            if(is_paid_int==1)
+            {
+                is_paid=TRUE;
+            }
+            
+            //NSLog(@"FeaturedLectureExistsInBookmark: topik_bookmark: bookmark_id=%d, lecture_id=%d,is_paid_int=%d, lecture_title=%@,  lecture_img=%@, video_count=%d, bm_created=%@",bookmark_id,lecture_id,is_paid_int,lecture_title,lecture_img,video_count,bm_created);
+            isExist=TRUE;
+        }
+        
+    }
+    [db close];
+
+    return isExist;
+}
++(void)RemoveFeaturedLectureFromBookmark:(FeaturedLecture*)featuredLecture{
+    
+    NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsPath = [paths objectAtIndex:0];
+    NSString *dbPath = [docsPath stringByAppendingPathComponent:@"LectureDB.sqlite"];
+    NSLog(@"dbPath:%@",dbPath);
+    FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
+    if (![db open]) {
+        NSLog(@"Could not open db.");
+    }
+    else
+    {
+        NSString *deleteQuery =@"";//@"DELETE FROM user WHERE age = 25";
+        deleteQuery=[NSString stringWithFormat:@"DELETE FROM topik_bookmark WHERE lecture_id=%d AND is_paid=1",featuredLecture.lecture_id];
+        [db executeUpdate:deleteQuery];
+        if ([db hadError]) {
+            NSLog(@"Clear Table:%@ Err %d: %@", @"topik_bookmark",[db lastErrorCode], [db lastErrorMessage]);
+        }
+    }
+    [db close];
+}
++(void)InsertFeaturedLectureVideoDownload:(FeaturedLecture*)featuredLecture{
+    /**
+     CREATE TABLE topik_download(download_id INTEGER PRIMARY KEY AUTOINCREMENT, lecture_id INTEGER, video_id INTEGER, video_sequence INTEGER, video_url TEXT, added_time TEXT, file_size integer, downloaded_size integer, status integer);
+     **/
+    NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsPath = [paths objectAtIndex:0];
+    NSString *dbPath = [docsPath stringByAppendingPathComponent:@"LectureDB.sqlite"];
+    //NSLog(@"dbPath:%@",dbPath);
+    FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
+    if (![db open]) {
+        NSLog(@"Could not open db.");
+    }
+    else
+    {
+        NSInteger videoCount=featuredLecture.videos.count;
+        NSInteger videoIndex=0;
+        for(videoIndex=0;videoIndex<videoCount;videoIndex++)
+        {
+            DownloadLecture *lecture=[[DownloadLecture alloc] initWithFeaturedLecture:featuredLecture videoIndexedAt:videoIndex];
+            if(![RemoteData VideoExistInDownload:lecture.video_id])
+            {
+                [db executeUpdate:@"INSERT INTO topik_download(lecture_id,video_id,video_sequence,video_url,video_name,added_time,file_size,downloaded_size,status) VALUES (?,?,?,?,?,?,?,?,?)",
+                 [NSNumber numberWithInt:lecture.lecture_id],
+                 [NSNumber numberWithInt:lecture.video_id],
+                 [NSNumber numberWithInt:lecture.video_sequence],
+                 lecture.video_url,
+                 lecture.video_name,
+                 lecture.added_time,
+                 [NSNumber numberWithInt:lecture.file_size],
+                 [NSNumber numberWithInt:lecture.downloaded_size],
+                 [NSNumber numberWithInt:lecture.status]
+                 ];
+                
+            }
+
+        }
+    }
+    
+    //print all download record out
+    NSString *query=@"SELECT * FROM topik_download";
+    FMResultSet *s = [db executeQuery:query];
+    while ([s next]) {
+        NSInteger download_id=[s intForColumn:@"download_id"];
+        NSInteger lecture_id=[s intForColumn:@"lecture_id"];
+        NSInteger video_id=[s intForColumn:@"video_id"];
+        NSInteger video_sequence=[s intForColumn:@"video_sequence"];
+        NSString *video_url=[s stringForColumn:@"video_url"];
+        NSString *video_name=[s stringForColumn:@"video_name"];
+        NSString *added_time=[s stringForColumn:@"added_time"];
+        NSInteger file_size=[s intForColumn:@"file_size"];
+        NSInteger downloaded_size=[s intForColumn:@"downloaded_size"];
+        NSInteger status=[s intForColumn:@"status"];
+        
+        NSLog(@"topik_download: download_id=%d, lecture_id=%d,video_id=%d, video_sequence=%d,  video_url=%@, video_name=%@, added_time=%@, file_size=%d, downloaded_size=%d, status=%d",download_id,lecture_id,video_id,video_sequence,video_url,video_name,added_time,file_size,downloaded_size,status);
+    }
+
+    [db close];
+}
++(void)InsertSingleDowloadVideoDownload:(DownloadLecture*)downloadVideo
+{
+    NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsPath = [paths objectAtIndex:0];
+    NSString *dbPath = [docsPath stringByAppendingPathComponent:@"LectureDB.sqlite"];
+    //NSLog(@"dbPath:%@",dbPath);
+    FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
+    if (![db open]) {
+        NSLog(@"Could not open db.");
+    }
+    else
+    {
+        DownloadLecture *lecture=downloadVideo;
+        if(![RemoteData VideoExistInDownload:lecture.video_id])
+        {
+            [db executeUpdate:@"INSERT INTO topik_download(lecture_id,video_id,video_sequence,video_url,video_name,added_time,file_size,downloaded_size,status) VALUES (?,?,?,?,?,?,?,?,?)",
+             [NSNumber numberWithInt:lecture.lecture_id],
+             [NSNumber numberWithInt:lecture.video_id],
+             [NSNumber numberWithInt:lecture.video_sequence],
+             lecture.video_url,
+             lecture.video_name,
+             lecture.added_time,
+             [NSNumber numberWithInt:lecture.file_size],
+             [NSNumber numberWithInt:lecture.downloaded_size],
+             [NSNumber numberWithInt:lecture.status]
+             ];
+            
+        }
+    }
+    
+    //print all download record out
+    NSString *query=@"SELECT * FROM topik_download";
+    FMResultSet *s = [db executeQuery:query];
+    while ([s next]) {
+        NSInteger download_id=[s intForColumn:@"download_id"];
+        NSInteger lecture_id=[s intForColumn:@"lecture_id"];
+        NSInteger video_id=[s intForColumn:@"video_id"];
+        NSInteger video_sequence=[s intForColumn:@"video_sequence"];
+        NSString *video_url=[s stringForColumn:@"video_url"];
+        NSString *video_name=[s stringForColumn:@"video_name"];
+        NSString *added_time=[s stringForColumn:@"added_time"];
+        NSInteger file_size=[s intForColumn:@"file_size"];
+        NSInteger downloaded_size=[s intForColumn:@"downloaded_size"];
+        NSInteger status=[s intForColumn:@"status"];
+        
+        NSLog(@"topik_download: download_id=%d, lecture_id=%d,video_id=%d, video_sequence=%d,  video_url=%@, video_name=%@, added_time=%@, file_size=%d, downloaded_size=%d, status=%d",download_id,lecture_id,video_id,video_sequence,video_url,video_name,added_time,file_size,downloaded_size,status);
+    }
+    
+    [db close];
+
+}
++(void)InsertSingleFeaturedLectureVideoDownload:(FeaturedLecture*)featuredLecture indexAt:(NSInteger)videoIndex{
+    /**
+     CREATE TABLE topik_download(download_id INTEGER PRIMARY KEY AUTOINCREMENT, lecture_id INTEGER, video_id INTEGER, video_sequence INTEGER, video_url TEXT, added_time TEXT, file_size integer, downloaded_size integer, status integer);
+     **/
+    NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsPath = [paths objectAtIndex:0];
+    NSString *dbPath = [docsPath stringByAppendingPathComponent:@"LectureDB.sqlite"];
+    //NSLog(@"dbPath:%@",dbPath);
+    FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
+    if (![db open]) {
+        NSLog(@"Could not open db.");
+    }
+    else
+    {
+        DownloadLecture *lecture=[[DownloadLecture alloc] initWithFeaturedLecture:featuredLecture videoIndexedAt:videoIndex];
+        if(![RemoteData VideoExistInDownload:lecture.video_id])
+        {
+            [db executeUpdate:@"INSERT INTO topik_download(lecture_id,video_id,video_sequence,video_url,video_name,added_time,file_size,downloaded_size,status) VALUES (?,?,?,?,?,?,?,?,?)",
+             [NSNumber numberWithInt:lecture.lecture_id],
+             [NSNumber numberWithInt:lecture.video_id],
+             [NSNumber numberWithInt:lecture.video_sequence],
+             lecture.video_url,
+             lecture.video_name,
+             lecture.added_time,
+             [NSNumber numberWithInt:lecture.file_size],
+             [NSNumber numberWithInt:lecture.downloaded_size],
+             [NSNumber numberWithInt:lecture.status]
+             ];
+            
+        }
+    }
+    
+    //print all download record out
+    NSString *query=@"SELECT * FROM topik_download";
+    FMResultSet *s = [db executeQuery:query];
+    while ([s next]) {
+        NSInteger download_id=[s intForColumn:@"download_id"];
+        NSInteger lecture_id=[s intForColumn:@"lecture_id"];
+        NSInteger video_id=[s intForColumn:@"video_id"];
+        NSInteger video_sequence=[s intForColumn:@"video_sequence"];
+        NSString *video_url=[s stringForColumn:@"video_url"];
+        NSString *video_name=[s stringForColumn:@"video_name"];
+        NSString *added_time=[s stringForColumn:@"added_time"];
+        NSInteger file_size=[s intForColumn:@"file_size"];
+        NSInteger downloaded_size=[s intForColumn:@"downloaded_size"];
+        NSInteger status=[s intForColumn:@"status"];
+        
+        NSLog(@"topik_download: download_id=%d, lecture_id=%d,video_id=%d, video_sequence=%d,  video_url=%@, video_name=%@, added_time=%@, file_size=%d, downloaded_size=%d, status=%d",download_id,lecture_id,video_id,video_sequence,video_url,video_name,added_time,file_size,downloaded_size,status);
+    }
+    
+    [db close];
+}
+
++(BOOL)VideoExistInDownload:(NSInteger)videoId{
+    BOOL isExist=FALSE;
+    NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsPath = [paths objectAtIndex:0];
+    NSString *dbPath = [docsPath stringByAppendingPathComponent:@"LectureDB.sqlite"];
+    //NSLog(@"dbPath:%@",dbPath);
+    FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
+    if (![db open]) {
+        NSLog(@"VideoExistInDownload Could not open db.");
+    }
+    else
+    {
+        
+        NSString *query=[NSString stringWithFormat:@"SELECT download_id FROM topik_download WHERE video_id=%d",videoId];
+        FMResultSet *s = [db executeQuery:query];
+        while ([s next]) {
+            isExist=TRUE;
+        }
+        
+    }
+    [db close];
+    
+    return isExist;
+}
++(BOOL)FeaturedLectureExistInDownload:(FeaturedLecture*)lecture{
+    BOOL isExist=FALSE;
+    NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsPath = [paths objectAtIndex:0];
+    NSString *dbPath = [docsPath stringByAppendingPathComponent:@"LectureDB.sqlite"];
+    //NSLog(@"dbPath:%@",dbPath);
+    FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
+    if (![db open]) {
+        NSLog(@"LectureExistInDownload Could not open db.");
+    }
+    else
+    {
+        
+        NSString *query=[NSString stringWithFormat:@"SELECT download_id FROM topik_download WHERE lecture_id=%d",lecture.lecture_id];
+        FMResultSet *s = [db executeQuery:query];
+        while ([s next]) {
+            isExist=TRUE;
+            break;
+        }
+        
+    }
+    [db close];
+    
+    return isExist;
+}
++(void)RemoveVideoFromDownloadByVideoId:(NSInteger)videoId{
+    NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsPath = [paths objectAtIndex:0];
+    NSString *dbPath = [docsPath stringByAppendingPathComponent:@"LectureDB.sqlite"];
+    NSLog(@"dbPath:%@",dbPath);
+    FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
+    if (![db open]) {
+        NSLog(@"Could not open db.");
+    }
+    else
+    {
+        NSString *deleteQuery =@"";//@"DELETE FROM user WHERE age = 25";
+        deleteQuery=[NSString stringWithFormat:@"DELETE FROM topik_download WHERE video_id=%d",videoId];
+        [db executeUpdate:deleteQuery];
+        if ([db hadError]) {
+            NSLog(@"RemoveLectureVideoFromDownload:%@ Err %d: %@", @"topik_download",[db lastErrorCode], [db lastErrorMessage]);
+        }
+    }
+    [db close];
+}
++(void)RemoveFeaturedLectureFromDownload:(FeaturedLecture*)featuredLecture{
+    NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsPath = [paths objectAtIndex:0];
+    NSString *dbPath = [docsPath stringByAppendingPathComponent:@"LectureDB.sqlite"];
+    NSLog(@"dbPath:%@",dbPath);
+    FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
+    if (![db open]) {
+        NSLog(@"Could not open db.");
+    }
+    else
+    {
+        NSString *deleteQuery =@"";//@"DELETE FROM user WHERE age = 25";
+        deleteQuery=[NSString stringWithFormat:@"DELETE FROM topik_download WHERE lecture_id=%d",featuredLecture.lecture_id];
+        [db executeUpdate:deleteQuery];
+        if ([db hadError]) {
+            NSLog(@"Clear Table:%@ Err %d: %@", @"topik_download",[db lastErrorCode], [db lastErrorMessage]);
+        }
+    }
+    [db close];
+
+}
++(BOOL)LectureVideoExistInDownload:(LectureVideo*)video
+{
+    BOOL isExist=FALSE;
+    NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsPath = [paths objectAtIndex:0];
+    NSString *dbPath = [docsPath stringByAppendingPathComponent:@"LectureDB.sqlite"];
+    //NSLog(@"dbPath:%@",dbPath);
+    FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
+    if (![db open]) {
+        NSLog(@"LectureExistInDownload Could not open db.");
+    }
+    else
+    {
+        
+        NSString *query=[NSString stringWithFormat:@"SELECT download_id FROM topik_download WHERE video_id=%d",video.video_id];
+        FMResultSet *s = [db executeQuery:query];
+        while ([s next]) {
+            isExist=TRUE;
+            break;
+        }
+        
+    }
+    [db close];
+    
+    return isExist;
+}
++(void)RemoveLectureVideoFromDownload:(LectureVideo*)video{
+    NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsPath = [paths objectAtIndex:0];
+    NSString *dbPath = [docsPath stringByAppendingPathComponent:@"LectureDB.sqlite"];
+    NSLog(@"dbPath:%@",dbPath);
+    FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
+    if (![db open]) {
+        NSLog(@"Could not open db.");
+    }
+    else
+    {
+        NSString *deleteQuery =@"";//@"DELETE FROM user WHERE age = 25";
+        deleteQuery=[NSString stringWithFormat:@"DELETE FROM topik_download WHERE video_id=%d",video.video_id];
+        [db executeUpdate:deleteQuery];
+        if ([db hadError]) {
+            NSLog(@"RemoveLectureVideoFromDownload:%@ Err %d: %@", @"topik_download",[db lastErrorCode], [db lastErrorMessage]);
+        }
+    }
+    [db close];
+    
+}
+#pragma mark-MyLectures DataSource
++(DownloadListData *)loadDownloadListData{
+    DownloadListData *listData=[[DownloadListData alloc] init];
+     listData.lectureArray=[[NSMutableArray alloc] init];
+    listData.lectureDictionary=[[NSMutableDictionary alloc] init];
+    listData.videoLectureDictionary=[[NSMutableDictionary alloc] init];
+    
+    NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsPath = [paths objectAtIndex:0];
+    NSString *dbPath = [docsPath stringByAppendingPathComponent:@"LectureDB.sqlite"];
+    //NSLog(@"dbPath:%@",dbPath);
+    FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
+    
+    if (![db open]) {
+        NSLog(@"Could not open db.");
+    }
+    else
+    {
+        NSString *query=@"SELECT DISTINCT lecture_id FROM topik_download ORDER BY download_id DESC";
+        FMResultSet *s = [db executeQuery:query];
+        while ([s next]) {
+            NSInteger download_id=[s intForColumn:@"download_id"];
+            NSInteger lecture_id=[s intForColumn:@"lecture_id"];
+             NSString * lecture_title=@"";
+            NSLog(@"topik_download: download_id=%d, lecture_id=%d",download_id,lecture_id);
+            //get lecture information
+            //CREATE TABLE topik_lecture_basic(lecture_id integer,lecture_title text,lecture_lang integer,lecture_type integer,lecture_level integer,lecture_exam integer, lecture_status integer, lecture_created text, lecture_updated text);
+            NSString *innerQuery=[NSString stringWithFormat:@"SELECT lecture_title FROM topik_lecture_basic WHERE lecture_id=%d",lecture_id];;
+            FMResultSet *innerS = [db executeQuery:innerQuery];
+            while ([innerS next]) {
+               lecture_title=[innerS stringForColumn:@"lecture_title"];
+                break;
+            }
+            NSString *lecture_id_str=[NSString stringWithFormat:@"%d",lecture_id];
+            [listData.lectureArray addObject:[NSNumber numberWithInt:lecture_id]];
+            [listData.lectureDictionary setObject:lecture_title forKey:lecture_id_str];
+            
+            innerQuery=[NSString stringWithFormat:@"SELECT * FROM topik_download WHERE lecture_id=%d ORDER BY video_sequence ASC",lecture_id];
+            innerS = [db executeQuery:innerQuery];
+            NSMutableArray *videos=[[NSMutableArray alloc] init];
+            while ([innerS next]) {
+                NSInteger download_id=[innerS intForColumn:@"download_id"];
+                //NSInteger lecture_id=[innerS intForColumn:@"lecture_id"];
+                NSInteger video_id=[innerS intForColumn:@"video_id"];
+                NSString *video_name=[innerS stringForColumn:@"video_name"];
+                NSInteger video_sequence=[innerS intForColumn:@"video_sequence"];
+                NSString *video_url=[innerS stringForColumn:@"video_url"];
+                NSString *added_time=[innerS stringForColumn:@"added_time"];
+                NSInteger file_size=[innerS intForColumn:@"file_size"];
+                NSInteger downloaded_size=[innerS intForColumn:@"downloaded_size"];
+                NSInteger status=[innerS intForColumn:@"status"];
+                DownloadLecture* video=[[DownloadLecture alloc] initWithDownloadId:download_id LectureId:lecture_id VideoId:video_id VideoSequence:video_sequence VideoUrl:video_url VideoName:video_name AddedTime:added_time FileSize:file_size DownloadedSize:downloaded_size Status:status];
+                [videos addObject:video];
+                
+            }
+            [listData.videoLectureDictionary setObject:videos forKey:lecture_id_str];
+
+        }
+
+    }
+    [db close];
+    
+    return listData;
 }
 @end

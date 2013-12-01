@@ -6,6 +6,12 @@
   Copyright (c) 2013年 RotateMediaLabs. All rights reserved.
 */
 "Featured Lectures" = "TOPIK真题特讲";
-"Detail"="详细内容";
+"Detail"="本讲内容";
 "Sample Video"="预览";
 "Playlist"="播放列表";
+"Video Detail"="视频内容";
+"Downloaded Video:"="已下载视频:";
+"Online Streaming:"="在线播放:";
+"Download"="下载";
+"Bookmark"="收藏";
+"My Lectures"="我的讲座";

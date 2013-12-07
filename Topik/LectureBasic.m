@@ -27,6 +27,6 @@
     return self;
 }
 -(void)print{
-    NSLog(@"Basic Info id:%d title:%@ lang:%d type:%d level:%d exam:%d status:%d created:%@ updated:%@",self.lecture_id,self.lecture_title,self.lecture_lang,self.lecture_type,self.lecture_level,self.lecture_exam,self.lecture_status,self.lecture_created,self.lecture_updated);
+    NSLog(@"Basic Info id:%ld title:%@ lang:%ld type:%ld level:%ld exam:%ld status:%ld created:%@ updated:%@",(long)self.lecture_id,self.lecture_title,(long)self.lecture_lang,(long)self.lecture_type,(long)self.lecture_level,(long)self.lecture_exam,(long)self.lecture_status,self.lecture_created,self.lecture_updated);
 }
 @end

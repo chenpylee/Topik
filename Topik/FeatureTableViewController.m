@@ -12,7 +12,7 @@
 #import "RemoteData.h"
 #import "FeaturedCellView.h"
 #import "FeaturedDetailViewController.h"
-#import <SDWebImage/UIImageView+WebCache.h>
+#import "UIImageView+WebCache.h"
 @interface FeatureTableViewController ()
 @property(nonatomic,strong)UIView* selectedBackgroundView;
 @property(nonatomic,strong)UIView* selectedBackgroundViewLv1;
@@ -128,7 +128,7 @@
     FeaturedLecture *lecture=self.lectures[indexPath.row];
     //cell.thumbImageview.image=[UIImage imageNamed:@"sample_thumbnail.png"];
     cell.titleLabel.text=lecture.lecture_title;
-    cell.countLabel.text=[NSString stringWithFormat:@"%d",lecture.lecture_count];
+    cell.countLabel.text=[NSString stringWithFormat:@"%ld",(long)lecture.lecture_count];
     //cell.selectedBackgroundView=self.selectedBackgroundView;
     UIImage *placeholder=nil;
     switch (lecture.level_id) {
@@ -167,7 +167,6 @@
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     self.selectedLecture=self.lectures[indexPath.row];
-    NSLog(@"Selected Row Index:%d",indexPath.row);
     [self performSegueWithIdentifier:@"FeaturedDetailSegue" sender:self];
 }
 /*

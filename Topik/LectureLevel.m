@@ -22,6 +22,6 @@
     return self;
 }
 -(void)print{
-    NSLog(@"Level id:%d name:%@ sequence:%d",self.level_id,self.level_name,self.level_sequence);
+    NSLog(@"Level id:%ld name:%@ sequence:%ld",(long)self.level_id,self.level_name,(long)self.level_sequence);
 }
 @end

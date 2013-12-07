@@ -69,12 +69,12 @@
     NSFileManager *fm;
     NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *docsPath = [paths objectAtIndex:0];
-    NSString *filePath = [docsPath stringByAppendingPathComponent:[NSString stringWithFormat:@"Featured/%d.mp4",self.selectedVideo.video_id]];
+    NSString *filePath = [docsPath stringByAppendingPathComponent:[NSString stringWithFormat:@"Lectures/%ld.mp4",(long)self.selectedVideo.video_id]];
     NSLog(@"video path:%@",filePath);
     fm=[NSFileManager defaultManager];
     if([fm fileExistsAtPath:filePath])
     {
-        NSURL* url=[NSURL URLWithString:filePath];
+        NSURL* url=[NSURL fileURLWithPath:filePath];
         player= [[MPMoviePlayerViewController alloc] init];
         [player.moviePlayer setFullscreen:NO];
         player.moviePlayer.movieSourceType = MPMovieSourceTypeFile;
@@ -153,7 +153,7 @@
 }
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    NSLog(@"Alert Tag=%d, button index=%d",alertView.tag,buttonIndex);
+    
     if(alertView.tag==10)
     {
         switch(buttonIndex)

@@ -18,6 +18,7 @@
 #import "ASIHTTPRequest.h"
 #import "BookmarkLecture.h"
 #import "DownloadLecture.h"
+#import "Downloader.h"
 @implementation RemoteData
 
 +(BOOL)processTotalJsonData:(NSData *)responseData
@@ -56,11 +57,12 @@
             LectureLanguage *language=[[LectureLanguage alloc] initWithId:lang_id name:lang_name description:lang_description];
             [lectureLanguages addObject:language];
         }
-        
+        /**
         for(id object in lectureLanguages)
         {
             [(LectureLanguage *)object print];
         }
+         **/
         
         
         //lecture categories
@@ -74,10 +76,12 @@
             LectureCategory *category=[[LectureCategory alloc] initWithId:type_id name:type_name sequence:type_sequence];
             [lectureCategories addObject:category];
         }
+        /**
         for(id object in lectureCategories)
         {
             [(LectureCategory *)object print];
         }
+         **/
         
         //lecture levels
         NSMutableArray *lectureLevels=[[NSMutableArray alloc] init];
@@ -90,10 +94,12 @@
             LectureLevel *level=[[LectureLevel alloc] initWithId:level_id name:level_name sequence:level_sequence];
             [lectureLevels addObject:level];
         }
+        /**
         for(id object in lectureLevels)
         {
             [(LectureLevel *)object print];
         }
+         **/
         
         //lecture sample videos
         NSMutableArray *lectureSamples=[[NSMutableArray alloc] init];
@@ -106,13 +112,16 @@
             NSString *sv_host=[dictionary objectForKey:@"sv_host"];
             NSString *sv_vid=[dictionary objectForKey:@"sv_vid"];
             NSString *sv_img=[dictionary objectForKey:@"sv_img"];
+            sv_img=[sv_img stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             LectureSample *sample=[[LectureSample alloc] initWithId:sv_id lecture:lecture_id url:sv_url host:sv_host vid:sv_vid imgUrl:sv_img];
             [lectureSamples addObject:sample];
         }
+        /**
         for(id object in lectureSamples)
         {
             [(LectureSample *)object print];
         }
+         **/
         
         //lecture sample videos
         NSMutableArray *lectureBasics=[[NSMutableArray alloc] init];
@@ -148,6 +157,7 @@
             NSInteger video_id=[[dictionary objectForKey:@"video_id"] intValue];
             NSInteger lecture_id=[[dictionary objectForKey:@"lecture_id"] intValue];
             NSString *video_file=[dictionary objectForKey:@"video_file"];
+            video_file=[video_file stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             NSString *video_name=[dictionary objectForKey:@"video_name"];
             NSInteger video_sequence=[[dictionary objectForKey:@"video_sequence"] intValue];
             LectureVideo* video=[[LectureVideo alloc] initWIthId:video_id lecture:lecture_id fileUrl:video_file name:video_name sequence:video_sequence];
@@ -169,7 +179,7 @@
             NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
             NSString *docsPath = [paths objectAtIndex:0];
             NSString *dbPath = [docsPath stringByAppendingPathComponent:@"LectureDB.sqlite"];
-            NSLog(@"dbPath:%@",dbPath);
+            //NSLog(@"dbPath:%@",dbPath);
             FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
             if (![db open]) {
                 NSLog(@"Could not open db.");
@@ -197,20 +207,23 @@
                 {
                     //
                     LectureLanguage *lang=(LectureLanguage *)language;
-                    [db executeUpdate:@"INSERT INTO topik_lang VALUES (?,?,?)", [NSNumber numberWithInt:lang.lang_id],lang.lang_name,lang.lang_description];
+                    [db executeUpdate:@"INSERT INTO topik_lang VALUES (?,?,?)", [NSNumber numberWithInteger:lang.lang_id],lang.lang_name,lang.lang_description];
                     if ([db hadError]) {
-                        NSLog(@"INSERT INTO Table:%@ Err %d: %@", @"topik_lang",[db lastErrorCode], [db lastErrorMessage]);
+                        //NSLog(@"INSERT INTO Table:%@ Err %d: %@", @"topik_lang",[db lastErrorCode], [db lastErrorMessage]);
                     }
                 }
                 //print out langues
+                
                 FMResultSet *s = [db executeQuery:@"SELECT * FROM topik_lang"];
+                /**
                 while ([s next]) {
                     int lang_id=[s intForColumn:@"lang_id"];
                     NSString *lang_name=[s stringForColumn:@"lang_name"];
                     NSString *lang_description=[s stringForColumn:@"lang_description"];
 
-                    NSLog(@"topik_lang: lang_id=%d, lang_name=%@, lang_description=%@",lang_id,lang_name,lang_description);
+                    //NSLog(@"topik_lang: lang_id=%d, lang_name=%@, lang_description=%@",lang_id,lang_name,lang_description);
                 }
+                **/
                 
                 //insert topik_lecture_cat data from lectureCategories
                 //CREATE TABLE topik_lecture_cat(type_id integer,type_name text,type_sequence integer);
@@ -218,12 +231,13 @@
                 {
                     //
                     LectureCategory *cat=(LectureCategory *)category;
-                    [db executeUpdate:@"INSERT INTO topik_lecture_cat VALUES (?,?,?)", [NSNumber numberWithInt:cat.type_id],cat.type_name, [NSNumber numberWithInt:cat.type_sequence]];
+                    [db executeUpdate:@"INSERT INTO topik_lecture_cat VALUES (?,?,?)", [NSNumber numberWithInteger:cat.type_id],cat.type_name, [NSNumber numberWithInteger:cat.type_sequence]];
                     if ([db hadError]) {
                         NSLog(@"INSERT INTO Table:%@ Err %d: %@", @"topik_lecture_cat",[db lastErrorCode], [db lastErrorMessage]);
                     }
                 }
                 //print out categories
+                /**
                 s = [db executeQuery:@"SELECT * FROM topik_lecture_cat"];
                 while ([s next]) {
                     int type_id=[s intForColumn:@"type_id"];
@@ -232,26 +246,29 @@
                     
                     NSLog(@"topik_lecture_cat: type_id=%d, type_name=%@, type_sequence=%d",type_id,type_name,type_sequence);
                 }
+                 **/
                 //insert topik_lecture_level data from lectureLevels
                 //CREATE TABLE topik_lecture_level(level_id integer,level_name text,level_sequence integer);
                 for(id level in lectureLevels)
                 {
                     //
                     LectureLevel *lv=(LectureLevel *)level;
-                    [db executeUpdate:@"INSERT INTO topik_lecture_level VALUES (?,?,?)", [NSNumber numberWithInt:lv.level_id],lv.level_name, [NSNumber numberWithInt:lv.level_sequence]];
+                    [db executeUpdate:@"INSERT INTO topik_lecture_level VALUES (?,?,?)", [NSNumber numberWithInteger:lv.level_id],lv.level_name, [NSNumber numberWithInteger:lv.level_sequence]];
                     if ([db hadError]) {
                         NSLog(@"INSERT INTO Table:%@ Err %d: %@", @"topik_lecture_level",[db lastErrorCode], [db lastErrorMessage]);
                     }
                 }
                 //print out levels
+                /**
                 s = [db executeQuery:@"SELECT * FROM topik_lecture_level"];
                 while ([s next]) {
                     int level_id=[s intForColumn:@"level_id"];
                     NSString *level_name=[s stringForColumn:@"level_name"];
                     int level_sequence=[s intForColumn:@"level_sequence"];
                     
-                    NSLog(@"topik_lecture_level: level_id=%d, level_name=%@, level_sequence=%d",level_id,level_name,level_sequence);
+                   NSLog(@"topik_lecture_level: level_id=%d, level_name=%@, level_sequence=%d",level_id,level_name,level_sequence);
                 }
+                 **/
 
                 //topik_lecture_basic
                 //insert topik_lecture_basic data from lectureBasics
@@ -261,13 +278,13 @@
                     //
                     LectureBasic *basic=(LectureBasic *)lectureBasic;
                     [db executeUpdate:@"INSERT INTO topik_lecture_basic VALUES (?,?,?,?,?,?,?,?,?)",
-                     [NSNumber numberWithInt:basic.lecture_id],
+                     [NSNumber numberWithInteger:basic.lecture_id],
                      basic.lecture_title,
-                     [NSNumber numberWithInt:basic.lecture_lang],
-                     [NSNumber numberWithInt:basic.lecture_type],
-                     [NSNumber numberWithInt:basic.lecture_level],
-                     [NSNumber numberWithInt:basic.lecture_exam],
-                     [NSNumber numberWithInt:basic.lecture_status],
+                     [NSNumber numberWithInteger:basic.lecture_lang],
+                     [NSNumber numberWithInteger:basic.lecture_type],
+                     [NSNumber numberWithInteger:basic.lecture_level],
+                     [NSNumber numberWithInteger:basic.lecture_exam],
+                     [NSNumber numberWithInteger:basic.lecture_status],
                      basic.lecture_created,
                      basic.lecture_updated
                      ];
@@ -276,6 +293,7 @@
                     }
                 }
                 //print out basic information
+                /**
                 s = [db executeQuery:@"SELECT * FROM topik_lecture_basic"];
                 while ([s next]) {
                     int lecture_id=[s intForColumn:@"lecture_id"];
@@ -290,7 +308,7 @@
                     
                     NSLog(@"topik_lecture_basic: lecture_id=%d, lecture_title=%@, lecture_lang=%d,  lecture_type=%d, lecture_level=%d, lecture_exam=%d, lecture_status=%d,lecture_created=%@, lecture_updated=%@,",lecture_id,lecture_title,lecture_lang,lecture_type,lecture_level,lecture_exam,lecture_status,lecture_created,lecture_updated);
                 }
-
+                **/
                 
                 //topik_lecture_video
                 //insert topik_lecture_video data from lectureVideos
@@ -300,11 +318,11 @@
                     //
                     LectureVideo *video=(LectureVideo *)lectureVideo;
                     [db executeUpdate:@"INSERT INTO topik_lecture_video VALUES (?,?,?,?,?)",
-                     [NSNumber numberWithInt:video.video_id],
-                     [NSNumber numberWithInt:video.lecture_id],
+                     [NSNumber numberWithInteger:video.video_id],
+                     [NSNumber numberWithInteger:video.lecture_id],
                      video.video_file,
                      video.video_name,
-                     [NSNumber numberWithInt:video.video_sequence]
+                     [NSNumber numberWithInteger:video.video_sequence]
                      ];
                     if ([db hadError]) {
                         NSLog(@"INSERT INTO Table:%@ Err %d: %@", @"topik_lecture_video",[db lastErrorCode], [db lastErrorMessage]);
@@ -330,8 +348,8 @@
                     //
                     LectureSample *sample=(LectureSample *)lectureSample;
                     [db executeUpdate:@"INSERT INTO topik_lecture_sample VALUES (?,?,?,?,?,?)",
-                     [NSNumber numberWithInt:sample.sv_id],
-                     [NSNumber numberWithInt:sample.lecture_id],
+                     [NSNumber numberWithInteger:sample.sv_id],
+                     [NSNumber numberWithInteger:sample.lecture_id],
                      sample.sv_url,
                      sample.sv_host,
                      sample.sv_vid,
@@ -342,6 +360,7 @@
                     }
                 }
                 //print out sample video information
+                /**
                 s = [db executeQuery:@"SELECT * FROM topik_lecture_sample"];
                 while ([s next]) {
                     int sv_id=[s intForColumn:@"sv_id"];
@@ -352,6 +371,7 @@
                     NSString *sv_img=[s stringForColumn:@"sv_img"];
                     NSLog(@"topik_lecture_sample: sv_id=%d, lecture_id=%d,sv_url=%@, sv_host=%@,  sv_vid=%@,sv_img=%@",sv_id,lecture_id,sv_url,sv_host,sv_vid,sv_img);
                 }
+                 **/
 
             }
             [db close];
@@ -413,7 +433,7 @@
     {
         //print out sample video information
         //TABLE topik_lecture_sample(sv_id integer,lecture_id integer,sv_url text,sv_host text,sv_vid text,sv_img text);
-         FMResultSet *s = [db executeQuery:[NSString stringWithFormat:@"SELECT * FROM topik_lecture_sample WHERE lecture_id=%d",lecture_id]];
+         FMResultSet *s = [db executeQuery:[NSString stringWithFormat:@"SELECT * FROM topik_lecture_sample WHERE lecture_id=%ld",(long)lecture_id]];
         if ([s next]) {
             int sv_id=[s intForColumn:@"sv_id"];
             int lecture_id=[s intForColumn:@"lecture_id"];
@@ -448,7 +468,7 @@
     {
         //print out sample video information
         //TABLE topik_lecture_sample(sv_id integer,lecture_id integer,sv_url text,sv_host text,sv_vid text,sv_img text);
-        NSString *query=[NSString stringWithFormat:@"SELECT * FROM topik_lecture_video WHERE lecture_id=%d",lecture_id];
+        NSString *query=[NSString stringWithFormat:@"SELECT * FROM topik_lecture_video WHERE lecture_id=%ld",(long)lecture_id];
         FMResultSet *s = [db executeQuery:query];
         while ([s next]) {
             int video_id=[s intForColumn:@"video_id"];
@@ -482,7 +502,7 @@
     }
     else
     {
-        NSString *query=[NSString stringWithFormat:@"SELECT * FROM topik_bookmark WHERE lecture_id=%d AND is_paid=1",featuredLecture.lecture_id];
+        NSString *query=[NSString stringWithFormat:@"SELECT * FROM topik_bookmark WHERE lecture_id=%ld AND is_paid=1",(long)featuredLecture.lecture_id];
         FMResultSet *s = [db executeQuery:query];
         BOOL isExist=FALSE;
         while ([s next]) {
@@ -499,18 +519,18 @@
             NSInteger video_count=[s intForColumn:@"video_count"];
             NSString *bm_created=[s stringForColumn:@"bm_created"];
             
-            NSLog(@"EXIST: topik_bookmark: bookmark_id=%d, lecture_id=%d,is_paid_int=%d, lecture_title=%@,  lecture_img=%@, video_count=%d, bm_created=%@",bookmark_id,lecture_id,is_paid_int,lecture_title,lecture_img,video_count,bm_created);
+            NSLog(@"EXIST: topik_bookmark: bookmark_id=%ld, lecture_id=%ld,is_paid_int=%ld, lecture_title=%@,  lecture_img=%@, video_count=%ld, bm_created=%@",(long)bookmark_id,(long)lecture_id,(long)is_paid_int,lecture_title,lecture_img,(long)video_count,bm_created);
             isExist=TRUE;
         }
         if(isExist)
             return;
 
         [db executeUpdate:@"INSERT INTO topik_bookmark(lecture_id,is_paid,lecture_title,lecture_img,video_count,bm_created) VALUES (?,?,?,?,?,?)",
-         [NSNumber numberWithInt:bookmark.lecture_id],
-         [NSNumber numberWithInt:1],
+         [NSNumber numberWithInteger:bookmark.lecture_id],
+         [NSNumber numberWithInteger:1],
          bookmark.lecture_title,
          bookmark.lecture_img,
-         [NSNumber numberWithInt:bookmark.video_count],
+         [NSNumber numberWithInteger:bookmark.video_count],
          bookmark.bm_created
          ];
         if ([db hadError]) {
@@ -521,20 +541,23 @@
         query=@"SELECT * FROM topik_bookmark";
         s = [db executeQuery:query];
         while ([s next]) {
-            NSInteger bookmark_id=[s intForColumn:@"bm_id"];
-            NSInteger lecture_id=[s intForColumn:@"lecture_id"];
+           
             NSInteger is_paid_int=[s intForColumn:@"is_paid"];
             BOOL is_paid=FALSE;
             if(is_paid_int==1)
             {
                 is_paid=TRUE;
             }
+            /**
+             NSInteger bookmark_id=[s intForColumn:@"bm_id"];
+             NSInteger lecture_id=[s intForColumn:@"lecture_id"];
             NSString *lecture_title=[s stringForColumn:@"lecture_title"];
             NSString *lecture_img=[s stringForColumn:@"lecture_img"];
             NSInteger video_count=[s intForColumn:@"video_count"];
             NSString *bm_created=[s stringForColumn:@"bm_created"];
             
             NSLog(@"topik_bookmark: bookmark_id=%d, lecture_id=%d,is_paid_int=%d, lecture_title=%@,  lecture_img=%@, video_count=%d, bm_created=%@",bookmark_id,lecture_id,is_paid_int,lecture_title,lecture_img,video_count,bm_created);
+             **/
         }
 
     }
@@ -553,7 +576,7 @@
     else
     {
         
-        NSString *query=[NSString stringWithFormat:@"SELECT * FROM topik_bookmark WHERE lecture_id=%d AND is_paid=1",featuredLecture.lecture_id];
+        NSString *query=[NSString stringWithFormat:@"SELECT * FROM topik_bookmark WHERE lecture_id=%ld AND is_paid=1",(long)featuredLecture.lecture_id];
         FMResultSet *s = [db executeQuery:query];
         while ([s next]) {
             NSInteger is_paid_int=[s intForColumn:@"is_paid"];
@@ -585,7 +608,7 @@
     else
     {
         NSString *deleteQuery =@"";//@"DELETE FROM user WHERE age = 25";
-        deleteQuery=[NSString stringWithFormat:@"DELETE FROM topik_bookmark WHERE lecture_id=%d AND is_paid=1",featuredLecture.lecture_id];
+        deleteQuery=[NSString stringWithFormat:@"DELETE FROM topik_bookmark WHERE lecture_id=%ld AND is_paid=1",(long)featuredLecture.lecture_id];
         [db executeUpdate:deleteQuery];
         if ([db hadError]) {
             NSLog(@"Clear Table:%@ Err %d: %@", @"topik_bookmark",[db lastErrorCode], [db lastErrorMessage]);
@@ -609,29 +632,31 @@
     {
         NSInteger videoCount=featuredLecture.videos.count;
         NSInteger videoIndex=0;
+        Downloader*downloader=[Downloader sharedInstance];
         for(videoIndex=0;videoIndex<videoCount;videoIndex++)
         {
             DownloadLecture *lecture=[[DownloadLecture alloc] initWithFeaturedLecture:featuredLecture videoIndexedAt:videoIndex];
             if(![RemoteData VideoExistInDownload:lecture.video_id])
             {
                 [db executeUpdate:@"INSERT INTO topik_download(lecture_id,video_id,video_sequence,video_url,video_name,added_time,file_size,downloaded_size,status) VALUES (?,?,?,?,?,?,?,?,?)",
-                 [NSNumber numberWithInt:lecture.lecture_id],
-                 [NSNumber numberWithInt:lecture.video_id],
-                 [NSNumber numberWithInt:lecture.video_sequence],
+                 [NSNumber numberWithInteger:lecture.lecture_id],
+                 [NSNumber numberWithInteger:lecture.video_id],
+                 [NSNumber numberWithInteger:lecture.video_sequence],
                  lecture.video_url,
                  lecture.video_name,
                  lecture.added_time,
-                 [NSNumber numberWithInt:lecture.file_size],
-                 [NSNumber numberWithInt:lecture.downloaded_size],
-                 [NSNumber numberWithInt:lecture.status]
+                 [NSNumber numberWithInteger:lecture.file_size],
+                 [NSNumber numberWithInteger:lecture.downloaded_size],
+                 [NSNumber numberWithInteger:lecture.status]
                  ];
                 
             }
-
+            [downloader addDownloadLecture:lecture];
         }
     }
     
     //print all download record out
+    /**
     NSString *query=@"SELECT * FROM topik_download";
     FMResultSet *s = [db executeQuery:query];
     while ([s next]) {
@@ -648,6 +673,7 @@
         
         NSLog(@"topik_download: download_id=%d, lecture_id=%d,video_id=%d, video_sequence=%d,  video_url=%@, video_name=%@, added_time=%@, file_size=%d, downloaded_size=%d, status=%d",download_id,lecture_id,video_id,video_sequence,video_url,video_name,added_time,file_size,downloaded_size,status);
     }
+     **/
 
     [db close];
 }
@@ -664,24 +690,27 @@
     else
     {
         DownloadLecture *lecture=downloadVideo;
+        Downloader*downloader=[Downloader sharedInstance];
         if(![RemoteData VideoExistInDownload:lecture.video_id])
         {
             [db executeUpdate:@"INSERT INTO topik_download(lecture_id,video_id,video_sequence,video_url,video_name,added_time,file_size,downloaded_size,status) VALUES (?,?,?,?,?,?,?,?,?)",
-             [NSNumber numberWithInt:lecture.lecture_id],
-             [NSNumber numberWithInt:lecture.video_id],
-             [NSNumber numberWithInt:lecture.video_sequence],
+             [NSNumber numberWithInteger:lecture.lecture_id],
+             [NSNumber numberWithInteger:lecture.video_id],
+             [NSNumber numberWithInteger:lecture.video_sequence],
              lecture.video_url,
              lecture.video_name,
              lecture.added_time,
-             [NSNumber numberWithInt:lecture.file_size],
-             [NSNumber numberWithInt:lecture.downloaded_size],
-             [NSNumber numberWithInt:lecture.status]
+             [NSNumber numberWithInteger:lecture.file_size],
+             [NSNumber numberWithInteger:lecture.downloaded_size],
+             [NSNumber numberWithInteger:lecture.status]
              ];
             
         }
+        [downloader addDownloadLecture:lecture];
     }
     
     //print all download record out
+    /**
     NSString *query=@"SELECT * FROM topik_download";
     FMResultSet *s = [db executeQuery:query];
     while ([s next]) {
@@ -698,6 +727,7 @@
         
         NSLog(@"topik_download: download_id=%d, lecture_id=%d,video_id=%d, video_sequence=%d,  video_url=%@, video_name=%@, added_time=%@, file_size=%d, downloaded_size=%d, status=%d",download_id,lecture_id,video_id,video_sequence,video_url,video_name,added_time,file_size,downloaded_size,status);
     }
+     **/
     
     [db close];
 
@@ -716,25 +746,28 @@
     }
     else
     {
+        Downloader*downloader=[Downloader sharedInstance];
         DownloadLecture *lecture=[[DownloadLecture alloc] initWithFeaturedLecture:featuredLecture videoIndexedAt:videoIndex];
         if(![RemoteData VideoExistInDownload:lecture.video_id])
         {
             [db executeUpdate:@"INSERT INTO topik_download(lecture_id,video_id,video_sequence,video_url,video_name,added_time,file_size,downloaded_size,status) VALUES (?,?,?,?,?,?,?,?,?)",
-             [NSNumber numberWithInt:lecture.lecture_id],
-             [NSNumber numberWithInt:lecture.video_id],
-             [NSNumber numberWithInt:lecture.video_sequence],
+             [NSNumber numberWithInteger:lecture.lecture_id],
+             [NSNumber numberWithInteger:lecture.video_id],
+             [NSNumber numberWithInteger:lecture.video_sequence],
              lecture.video_url,
              lecture.video_name,
              lecture.added_time,
-             [NSNumber numberWithInt:lecture.file_size],
-             [NSNumber numberWithInt:lecture.downloaded_size],
-             [NSNumber numberWithInt:lecture.status]
+             [NSNumber numberWithInteger:lecture.file_size],
+             [NSNumber numberWithInteger:lecture.downloaded_size],
+             [NSNumber numberWithInteger:lecture.status]
              ];
             
         }
+        [downloader addDownloadLecture:lecture];
     }
     
     //print all download record out
+    /**
     NSString *query=@"SELECT * FROM topik_download";
     FMResultSet *s = [db executeQuery:query];
     while ([s next]) {
@@ -751,7 +784,7 @@
         
         NSLog(@"topik_download: download_id=%d, lecture_id=%d,video_id=%d, video_sequence=%d,  video_url=%@, video_name=%@, added_time=%@, file_size=%d, downloaded_size=%d, status=%d",download_id,lecture_id,video_id,video_sequence,video_url,video_name,added_time,file_size,downloaded_size,status);
     }
-    
+    **/
     [db close];
 }
 
@@ -768,7 +801,7 @@
     else
     {
         
-        NSString *query=[NSString stringWithFormat:@"SELECT download_id FROM topik_download WHERE video_id=%d",videoId];
+        NSString *query=[NSString stringWithFormat:@"SELECT download_id FROM topik_download WHERE video_id=%ld",(long)videoId];
         FMResultSet *s = [db executeQuery:query];
         while ([s next]) {
             isExist=TRUE;
@@ -792,7 +825,7 @@
     else
     {
         
-        NSString *query=[NSString stringWithFormat:@"SELECT download_id FROM topik_download WHERE lecture_id=%d",lecture.lecture_id];
+        NSString *query=[NSString stringWithFormat:@"SELECT download_id FROM topik_download WHERE lecture_id=%ld",(long)lecture.lecture_id];
         FMResultSet *s = [db executeQuery:query];
         while ([s next]) {
             isExist=TRUE;
@@ -815,8 +848,27 @@
     }
     else
     {
+        NSString *query=[NSString stringWithFormat:@"SELECT * FROM topik_download WHERE video_id=%ld",(long)videoId];
+        FMResultSet *s = [db executeQuery:query];
+        Downloader*downloader=[Downloader sharedInstance];
+        while ([s next]) {
+            NSInteger video_id=[s intForColumn:@"video_id"];
+            NSString *video_url=[s stringForColumn:@"video_url"];
+            NSString *downloadPath=[docsPath stringByAppendingFormat:@"/Lectures/%ld.mp4",(long)video_id];
+            NSString *tempPath=[docsPath stringByAppendingFormat:@"/LectureTmp/%ld.download",(long)video_id];
+            if([[NSFileManager defaultManager] fileExistsAtPath:downloadPath])
+            {
+                [[NSFileManager defaultManager] removeItemAtPath:downloadPath error:Nil];
+            }
+            [downloader removeRequestWithUrl:video_url];
+            if([[NSFileManager defaultManager] fileExistsAtPath:tempPath])
+            {
+                [[NSFileManager defaultManager] removeItemAtPath:tempPath error:Nil];
+            }
+        }
+
         NSString *deleteQuery =@"";//@"DELETE FROM user WHERE age = 25";
-        deleteQuery=[NSString stringWithFormat:@"DELETE FROM topik_download WHERE video_id=%d",videoId];
+        deleteQuery=[NSString stringWithFormat:@"DELETE FROM topik_download WHERE video_id=%ld",(long)videoId];
         [db executeUpdate:deleteQuery];
         if ([db hadError]) {
             NSLog(@"RemoveLectureVideoFromDownload:%@ Err %d: %@", @"topik_download",[db lastErrorCode], [db lastErrorMessage]);
@@ -835,8 +887,27 @@
     }
     else
     {
+        NSString *query=[NSString stringWithFormat:@"SELECT * FROM topik_download WHERE lecture_id=%ld",(long)featuredLecture.lecture_id];
+        FMResultSet *s = [db executeQuery:query];
+        Downloader*downloader=[Downloader sharedInstance];
+        while ([s next]) {
+            NSInteger video_id=[s intForColumn:@"video_id"];
+            NSString *video_url=[s stringForColumn:@"video_url"];
+            NSString *downloadPath=[docsPath stringByAppendingFormat:@"/Lectures/%ld.mp4",(long)video_id];
+            NSString *tempPath=[docsPath stringByAppendingFormat:@"/LectureTmp/%ld.download",(long)video_id];
+            if([[NSFileManager defaultManager] fileExistsAtPath:downloadPath])
+            {
+                [[NSFileManager defaultManager] removeItemAtPath:downloadPath error:Nil];
+            }
+            [downloader removeRequestWithUrl:video_url];
+            if([[NSFileManager defaultManager] fileExistsAtPath:tempPath])
+            {
+                [[NSFileManager defaultManager] removeItemAtPath:tempPath error:Nil];
+            }
+        }
+        
         NSString *deleteQuery =@"";//@"DELETE FROM user WHERE age = 25";
-        deleteQuery=[NSString stringWithFormat:@"DELETE FROM topik_download WHERE lecture_id=%d",featuredLecture.lecture_id];
+        deleteQuery=[NSString stringWithFormat:@"DELETE FROM topik_download WHERE lecture_id=%ld",(long)featuredLecture.lecture_id];
         [db executeUpdate:deleteQuery];
         if ([db hadError]) {
             NSLog(@"Clear Table:%@ Err %d: %@", @"topik_download",[db lastErrorCode], [db lastErrorMessage]);
@@ -859,7 +930,7 @@
     else
     {
         
-        NSString *query=[NSString stringWithFormat:@"SELECT download_id FROM topik_download WHERE video_id=%d",video.video_id];
+        NSString *query=[NSString stringWithFormat:@"SELECT download_id FROM topik_download WHERE video_id=%ld",(long)video.video_id];
         FMResultSet *s = [db executeQuery:query];
         while ([s next]) {
             isExist=TRUE;
@@ -883,16 +954,169 @@
     else
     {
         NSString *deleteQuery =@"";//@"DELETE FROM user WHERE age = 25";
-        deleteQuery=[NSString stringWithFormat:@"DELETE FROM topik_download WHERE video_id=%d",video.video_id];
+        Downloader* downloader=[Downloader sharedInstance];
+        NSString *video_url=video.video_file;
+        NSString *downloadPath=[docsPath stringByAppendingFormat:@"/Lectures/%ld.mp4",(long)video.video_id];
+        NSString *tempPath=[docsPath stringByAppendingFormat:@"/LectureTmp/%ld.download",(long)video.video_id];
+        if([[NSFileManager defaultManager] fileExistsAtPath:downloadPath])
+        {
+            [[NSFileManager defaultManager] removeItemAtPath:downloadPath error:Nil];
+        }
+        [downloader removeRequestWithUrl:video_url];
+        if([[NSFileManager defaultManager] fileExistsAtPath:tempPath])
+        {
+            [[NSFileManager defaultManager] removeItemAtPath:tempPath error:Nil];
+        }
+
+        
+        deleteQuery=[NSString stringWithFormat:@"DELETE FROM topik_download WHERE video_id=%ld",(long)video.video_id];
         [db executeUpdate:deleteQuery];
         if ([db hadError]) {
             NSLog(@"RemoveLectureVideoFromDownload:%@ Err %d: %@", @"topik_download",[db lastErrorCode], [db lastErrorMessage]);
         }
+        
+        
     }
     [db close];
     
 }
 #pragma mark-MyLectures DataSource
++(void)updateFileSizeForVideoID:(NSInteger)videoID withFileSize:(long long)totalSize{
+    NSString *updateQuery=[NSString stringWithFormat:@"Update topik_download SET file_size=%lli WHERE video_id=%ld",totalSize,(long)videoID];
+    NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsPath = [paths objectAtIndex:0];
+    NSString *dbPath = [docsPath stringByAppendingPathComponent:@"LectureDB.sqlite"];
+    //NSLog(@"dbPath:%@",dbPath);
+    FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
+    
+    if (![db open]) {
+        NSLog(@"Could not open db.");
+    }
+    else
+    {
+        [db executeUpdate:updateQuery];
+        if ([db hadError]) {
+            NSLog(@"updateFileSizeForVideoID:%@ Err %d: %@", @"topik_download",[db lastErrorCode], [db lastErrorMessage]);
+        }
+    }
+    [db close];
+    
+}
++(void)updateDownloadStatusForVideoID:(NSInteger)videoID withStatus:(NSInteger)status{
+    NSString *updateQuery=[NSString stringWithFormat:@"Update topik_download SET status=%ld WHERE video_id=%ld",(long)status,(long)videoID];
+    NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsPath = [paths objectAtIndex:0];
+    NSString *dbPath = [docsPath stringByAppendingPathComponent:@"LectureDB.sqlite"];
+    //NSLog(@"dbPath:%@",dbPath);
+    FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
+    
+    if (![db open]) {
+        NSLog(@"Could not open db.");
+    }
+    else
+    {
+        [db executeUpdate:updateQuery];
+        if ([db hadError]) {
+            NSLog(@"updateDownloadStatusForDownloadID:%@ Err %d: %@", @"topik_download",[db lastErrorCode], [db lastErrorMessage]);
+        }
+    }
+    [db close];
+
+}
++(void)updateDownloadStatusForDownloadID:(NSInteger)downloadId withStatus:(NSInteger)status
+{
+    NSString *updateQuery=[NSString stringWithFormat:@"Update topik_download SET status=%ld WHERE download_id=%ld",(long)status,(long)downloadId];
+    NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsPath = [paths objectAtIndex:0];
+    NSString *dbPath = [docsPath stringByAppendingPathComponent:@"LectureDB.sqlite"];
+    //NSLog(@"dbPath:%@",dbPath);
+    FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
+    
+    if (![db open]) {
+        NSLog(@"Could not open db.");
+    }
+    else
+    {
+        [db executeUpdate:updateQuery];
+        if ([db hadError]) {
+            NSLog(@"updateDownloadStatusForDownloadID:%@ Err %d: %@", @"topik_download",[db lastErrorCode], [db lastErrorMessage]);
+        }
+    }
+    [db close];
+}
++(NSMutableArray *)loadDownloadingListData{
+    NSMutableArray *downloadList=[[NSMutableArray alloc] init];
+    NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsPath = [paths objectAtIndex:0];
+    NSString *dbPath = [docsPath stringByAppendingPathComponent:@"LectureDB.sqlite"];
+    //NSLog(@"dbPath:%@",dbPath);
+    FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
+    
+    if (![db open]) {
+        NSLog(@"Could not open db.");
+    }
+    else
+    {
+        
+        //status==0 prepare
+        //status==1 downloading
+        //status==2 fail
+        //status==3 done
+        NSString *query=@"SELECT * FROM topik_download WHERE status!=3 ORDER BY download_id ASC";
+        FMResultSet *innerS = [db executeQuery:query];
+            while ([innerS next]) {
+                NSInteger download_id=[innerS intForColumn:@"download_id"];
+                NSInteger lecture_id=[innerS intForColumn:@"lecture_id"];
+                NSInteger video_id=[innerS intForColumn:@"video_id"];
+                NSString *video_name=[innerS stringForColumn:@"video_name"];
+                NSInteger video_sequence=[innerS intForColumn:@"video_sequence"];
+                NSString *video_url=[innerS stringForColumn:@"video_url"];
+                NSString *added_time=[innerS stringForColumn:@"added_time"];
+                NSInteger file_size=[innerS intForColumn:@"file_size"];
+                NSInteger downloaded_size=[innerS intForColumn:@"downloaded_size"];
+                NSInteger status=[innerS intForColumn:@"status"];
+                DownloadLecture* video=[[DownloadLecture alloc] initWithDownloadId:download_id LectureId:lecture_id VideoId:video_id VideoSequence:video_sequence VideoUrl:video_url VideoName:video_name AddedTime:added_time FileSize:file_size DownloadedSize:downloaded_size Status:status];
+                //NSLog(@"download id:%d",download_id);
+                [downloadList addObject:video];
+            }
+    }
+    [db close];
+    
+    return downloadList;
+}
++(NSMutableArray *)loadDownloadingVideoListForFeaturedLecture:(FeaturedLecture*)lecture{
+    NSMutableArray *videos=[[NSMutableArray alloc] init];
+    NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsPath = [paths objectAtIndex:0];
+    NSString *dbPath = [docsPath stringByAppendingPathComponent:@"LectureDB.sqlite"];
+    FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
+    if (![db open]) {
+        NSLog(@"Could not open db.");
+    }
+    else
+    {
+        NSString *query=[NSString stringWithFormat:@"SELECT * FROM topik_download WHERE lecture_id=%ld ORDER BY video_sequence ASC",(long)lecture.lecture_id];
+        FMResultSet *innerS = [db executeQuery:query];
+        while ([innerS next]) {
+            NSInteger download_id=[innerS intForColumn:@"download_id"];
+            //NSInteger lecture_id=[innerS intForColumn:@"lecture_id"];
+            NSInteger video_id=[innerS intForColumn:@"video_id"];
+            NSString *video_name=[innerS stringForColumn:@"video_name"];
+            NSInteger video_sequence=[innerS intForColumn:@"video_sequence"];
+            NSString *video_url=[innerS stringForColumn:@"video_url"];
+            NSString *added_time=[innerS stringForColumn:@"added_time"];
+            NSInteger file_size=[innerS intForColumn:@"file_size"];
+            NSInteger downloaded_size=[innerS intForColumn:@"downloaded_size"];
+            NSInteger status=[innerS intForColumn:@"status"];
+            DownloadLecture* video=[[DownloadLecture alloc] initWithDownloadId:download_id LectureId:lecture.lecture_id VideoId:video_id VideoSequence:video_sequence VideoUrl:video_url VideoName:video_name AddedTime:added_time FileSize:file_size DownloadedSize:downloaded_size Status:status];
+            [videos addObject:video];
+            
+        }
+
+    }
+    [db close];
+    return videos;
+}
 +(DownloadListData *)loadDownloadListData{
     DownloadListData *listData=[[DownloadListData alloc] init];
      listData.lectureArray=[[NSMutableArray alloc] init];
@@ -916,20 +1140,20 @@
             NSInteger download_id=[s intForColumn:@"download_id"];
             NSInteger lecture_id=[s intForColumn:@"lecture_id"];
              NSString * lecture_title=@"";
-            NSLog(@"topik_download: download_id=%d, lecture_id=%d",download_id,lecture_id);
+            NSLog(@"topik_download: download_id=%ld, lecture_id=%ld",(long)download_id,(long)lecture_id);
             //get lecture information
             //CREATE TABLE topik_lecture_basic(lecture_id integer,lecture_title text,lecture_lang integer,lecture_type integer,lecture_level integer,lecture_exam integer, lecture_status integer, lecture_created text, lecture_updated text);
-            NSString *innerQuery=[NSString stringWithFormat:@"SELECT lecture_title FROM topik_lecture_basic WHERE lecture_id=%d",lecture_id];;
+            NSString *innerQuery=[NSString stringWithFormat:@"SELECT lecture_title FROM topik_lecture_basic WHERE lecture_id=%ld",(long)lecture_id];;
             FMResultSet *innerS = [db executeQuery:innerQuery];
             while ([innerS next]) {
                lecture_title=[innerS stringForColumn:@"lecture_title"];
                 break;
             }
-            NSString *lecture_id_str=[NSString stringWithFormat:@"%d",lecture_id];
-            [listData.lectureArray addObject:[NSNumber numberWithInt:lecture_id]];
+            NSString *lecture_id_str=[NSString stringWithFormat:@"%ld",(long)lecture_id];
+            [listData.lectureArray addObject:[NSNumber numberWithInteger:lecture_id]];
             [listData.lectureDictionary setObject:lecture_title forKey:lecture_id_str];
             
-            innerQuery=[NSString stringWithFormat:@"SELECT * FROM topik_download WHERE lecture_id=%d ORDER BY video_sequence ASC",lecture_id];
+            innerQuery=[NSString stringWithFormat:@"SELECT * FROM topik_download WHERE lecture_id=%ld ORDER BY video_sequence ASC",(long)lecture_id];
             innerS = [db executeQuery:innerQuery];
             NSMutableArray *videos=[[NSMutableArray alloc] init];
             while ([innerS next]) {
@@ -955,5 +1179,93 @@
     [db close];
     
     return listData;
+}
+
++(void)updateDownloadProgressFromDisk{
+    NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsPath = [paths objectAtIndex:0];
+    NSString *downloadPath = [docsPath stringByAppendingPathComponent:@"Lectures"];
+    NSString *tmpPath = [docsPath stringByAppendingPathComponent:@"LectureTmp"];
+    NSString *dbPath = [docsPath stringByAppendingPathComponent:@"LectureDB.sqlite"];
+    FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
+    NSString *updateStatusQuery=@"";
+    if (![db open]) {
+        NSLog(@"Could not open db.");
+        return;
+    }
+    //Downloaded Files
+    NSArray *directoryContent = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:downloadPath error:NULL];
+    int count=0;
+    NSString *fileName=@"";
+     NSString *videoIDString=@"";
+    NSInteger videoId=0;
+    for (count = 0; count < (int)[directoryContent count]; count++)
+    {
+        fileName=[directoryContent objectAtIndex:count];
+        if([fileName hasSuffix:@".mp4"])
+        {
+            //NSLog(@"File %d: %@", (count + 1), [directoryContent objectAtIndex:count]);
+            //update video status to Done status
+            fileName=[directoryContent objectAtIndex:count];
+            videoIDString=[fileName substringToIndex:([fileName length]-4)];
+            videoId=[videoIDString intValue];
+            
+            updateStatusQuery=[NSString stringWithFormat:@"Update topik_download SET status=%d WHERE video_id=%ld",kDownloadFinishedStatus,(long)videoId];
+            //[RemoteData updateDownloadStatusForVideoID:(NSInteger)videoID withStatus:(NSInteger)status
+            [db executeUpdate:updateStatusQuery];
+            if ([db hadError]) {
+                NSLog(@"updateDownloadProgressFromDisk:%@ Err %d: %@", @"topik_download",[db lastErrorCode], [db lastErrorMessage]);
+            }
+        }
+    }
+    
+    //Tmp files
+    directoryContent = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:tmpPath error:NULL];
+    count=0;
+    fileName=@"";
+    videoIDString=@"";
+    videoId=0;
+    NSString *downloadTempPath=@"";
+    for (count = 0; count < (int)[directoryContent count]; count++)
+    {
+        fileName=[directoryContent objectAtIndex:count];
+        if([fileName hasSuffix:@".download"])
+        {
+            //NSLog(@"File %d: %@", (count + 1), [directoryContent objectAtIndex:count]);
+            //update video status to Done status
+            fileName=[directoryContent objectAtIndex:count];
+            videoIDString=[fileName substringToIndex:([fileName length]-9)];
+            videoId=[videoIDString intValue];
+            
+            updateStatusQuery=[NSString stringWithFormat:@"Update topik_download SET status=%d WHERE video_id=%ld",kDownloadDownloadingStatus,(long)videoId];
+            //[RemoteData updateDownloadStatusForVideoID:(NSInteger)videoID withStatus:(NSInteger)status
+            [db executeUpdate:updateStatusQuery];
+            if ([db hadError]) {
+                NSLog(@"updateDownloadProgressFromDisk:%@ Err %d: %@", @"topik_download",[db lastErrorCode], [db lastErrorMessage]);
+            }
+            
+            //update downloaded file size
+            downloadTempPath=[tmpPath stringByAppendingFormat:@"/%ld.download",(long)videoId];
+            NSDictionary *attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:downloadTempPath error: NULL];
+            {
+                if(attrs!=nil)
+                {
+                    unsigned long long size = [attrs fileSize];
+                    updateStatusQuery=[NSString stringWithFormat:@"Update topik_download SET downloaded_size=%lli WHERE video_id=%ld",size,(long)videoId];
+                    NSLog(@"%@",updateStatusQuery);
+                    //[RemoteData updateDownloadStatusForVideoID:(NSInteger)videoID withStatus:(NSInteger)status
+                    [db executeUpdate:updateStatusQuery];
+                    if ([db hadError]) {
+                        NSLog(@"updateDownloadProgressFromDisk:%@ Err %d: %@", @"topik_download",[db lastErrorCode], [db lastErrorMessage]);
+                    }
+
+                }
+            }
+
+        }
+    }
+
+    
+    [db close];
 }
 @end

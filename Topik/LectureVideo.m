@@ -24,6 +24,6 @@
     return self;
 }
 -(void)print{
-    NSLog(@"Video id:%d lecture id:%d fileUrl:%@ name:%@ sequence:%d",self.video_id,self.lecture_id,self.video_file,self.video_name,self.video_sequence);
+    //NSLog(@"Video id:%d lecture id:%d fileUrl:%@ name:%@ sequence:%d",self.video_id,self.lecture_id,self.video_file,self.video_name,self.video_sequence);
 }
 @end

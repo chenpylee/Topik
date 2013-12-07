@@ -30,4 +30,10 @@
 +(void)RemoveLectureVideoFromDownload:(LectureVideo*)video;
 +(void)RemoveVideoFromDownloadByVideoId:(NSInteger)videoId;
 +(DownloadListData *)loadDownloadListData;
++(NSMutableArray *)loadDownloadingListData;
++(void)updateDownloadStatusForDownloadID:(NSInteger)downloadId withStatus:(NSInteger)status;
++(void)updateDownloadStatusForVideoID:(NSInteger)videoID withStatus:(NSInteger)status;
++(void)updateFileSizeForVideoID:(NSInteger)videoID withFileSize:(long long)totalSize;
++(void)updateDownloadProgressFromDisk;
++(NSMutableArray *)loadDownloadingVideoListForFeaturedLecture:(FeaturedLecture*)lecture;
 @end

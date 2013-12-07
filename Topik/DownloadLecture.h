@@ -24,4 +24,5 @@
 @property(nonatomic,assign,readonly)NSInteger status;
 -(id)initWithFeaturedLecture:(FeaturedLecture*)lecture videoIndexedAt:(NSInteger)index;
 -(id)initWithDownloadId:(NSInteger)download_id LectureId:(NSInteger)lecture_id VideoId:(NSInteger)video_id VideoSequence:(NSInteger)video_sequence VideoUrl:(NSString*)video_url VideoName:(NSString*)video_name AddedTime:(NSString*)added_time FileSize:(NSInteger)file_size DownloadedSize:(NSInteger)downloaded_size Status:(NSInteger)status;
+-(void)updateTotalSize:(NSInteger)file_size DownloadedSize:(NSInteger)downloaded_size;
 @end

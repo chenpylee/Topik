@@ -26,6 +26,6 @@
     return self;
 }
 -(void)print{
-    NSLog(@"Sample id:%d lecture id:%d url:%@ host:%@ vid:%@ img:%@",self.sv_id,self.lecture_id,self.sv_url,self.sv_host,self.sv_vid,self.sv_img);
+    //NSLog(@"Sample id:%d lecture id:%d url:%@ host:%@ vid:%@ img:%@",self.sv_id,self.lecture_id,self.sv_url,self.sv_host,self.sv_vid,self.sv_img);
 }
 @end

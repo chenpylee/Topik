@@ -43,4 +43,9 @@
     }
     return self;
 }
+-(void)updateTotalSize:(NSInteger)file_size DownloadedSize:(NSInteger)downloaded_size
+{
+    _file_size=file_size;
+    _downloaded_size=downloaded_size;
+}
 @end

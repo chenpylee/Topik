@@ -16,6 +16,10 @@
 #import "BookmarkLecture.h"
 #import "RemoteData.h"
 #import "FeaturedVideoDetailViewController.h"
+#import "Downloader.h"
+#import "DownloadLecture.h"
+#import "FeaturedPlaylistCell.h"
+#import "DownloadProgress.h"
 @interface FeaturedDetailViewController ()
 {
     MPMoviePlayerViewController *player;
@@ -23,6 +27,7 @@
     __weak IBOutlet UILabel *titleLabel;
     __weak IBOutlet UILabel *playlistLabel;
     __weak IBOutlet UITableView *playlistTableView;
+    NSMutableArray *videosFromDB;
 }
 @property (weak, nonatomic) IBOutlet UIView *videoSuper;
 @property (nonatomic,assign) NSInteger selectedVideoIndex;
@@ -67,11 +72,112 @@
     NSLog(@"FeaturedDetail:vid:%@",self.lecture.sample.sv_vid);
    [self parepareVideo:sampleUrlString];
     
+    [RemoteData updateDownloadProgressFromDisk];
+    [self updateProgressDataFromDB];
+    [playlistTableView reloadData];
+    //register DownloadProgressNotification
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setProgress:) name:kDownloadProgressNotification object:nil];
+    
+}
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 - (void)didReceiveMemoryWaning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+-(void)setProgress:(NSNotification *) notification
+{
+   
+        DownloadProgress *progress=(DownloadProgress*)[notification.userInfo objectForKey:@"progress"];
+        //NSLog(@"Progress Updated:%f",progress.progressInFloat);
+        NSInteger lecture_id=progress.lecture_id;
+        NSInteger video_id=progress.video_id;
+        //NSLog(@"Lecture id:%d Video id:%d %.2f%%",lecture_id,video_id,progress.progressInFloat*100);
+        //get Section and Row for IndexPath
+        NSInteger section_index=0;
+        //NSLog(@"section_index=%d",section_index);
+       // NSString *lecture_id_str=[NSString stringWithFormat:@"%ld",(long)lecture_id];
+        NSInteger row_index=0;
+        for(DownloadLecture * video in videosFromDB)
+        {
+            
+            if(video.video_id==video_id)
+            {
+                [video updateTotalSize:(NSInteger)progress.totalSize DownloadedSize:(NSInteger)progress.received];
+                break;
+            }
+        }
+        for(LectureVideo *video in self.lecture.videos)
+        {
+            if(video.video_id==video_id)
+            {
+                break;
+            }
+            row_index++;
+        }
+        NSLog(@"section_index=%ld row_index=%ld Lecture id:%ld Video id:%ld %.2f%%",(long)section_index,(long)row_index,(long)lecture_id,(long)video_id,progress.progressInFloat*100);
+        FeaturedPlaylistCell *cell = (FeaturedPlaylistCell *)[playlistTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:row_index inSection:section_index]];
+        [self updateCellProgress:cell withProgress:progress];
+    
+}
+- (void)updateCellProgress:(FeaturedPlaylistCell *)cell withProgress:(DownloadProgress*)progress{
+    
+    
+    if(cell)
+    {
+        float downloadedF, totalF;
+		char prefix;
+        float total=(float)progress.totalSize;
+        float downloaded=(float)progress.received;
+		if (total >= 1024 * 1024 * 1024)
+        {
+			downloadedF = (float)downloaded / (1024 * 1024 * 1024);
+			totalF = (float)total / (1024 * 1024 * 1024);
+			prefix = 'G';
+		}
+        else if (total >= 1024 * 1024)
+        {
+			downloadedF = (float)downloaded / (1024 * 1024);
+			totalF = (float)total / (1024 * 1024);
+			prefix = 'M';
+		}
+        else if (total >= 1024)
+        {
+			downloadedF = (float)downloaded / 1024;
+			totalF = (float)total / 1024;
+			prefix = 'k';
+		}
+        else
+        {
+			downloadedF = (float)downloaded;
+			totalF = (float)total;
+			prefix = '\0';
+		}
+        
+		//float speedNorm = downloadedF / dt;
+		NSString *subtitle = [[NSString alloc] initWithFormat:@"%.2f / %.2f %cB",downloadedF, totalF, prefix];
+        NSString *progressText=NSLocalizedString(@"Download:", nil);
+        if(progress.received==progress.totalSize)
+        {
+            progressText=[progressText stringByAppendingFormat:@" %@",NSLocalizedString(@"Done", nil)];
+            progressText=[progressText stringByAppendingFormat:@" %.2f %cB",totalF,prefix];
+        }
+        else
+        {
+            progressText=[progressText stringByAppendingFormat:@" %@",subtitle];
+            
+        }
+        
+        cell.videoStatusLabel.text=progressText;
+        
+    }
+}
+
+-(void)updateProgressDataFromDB{
+    videosFromDB=[RemoteData loadDownloadingVideoListForFeaturedLecture:self.lecture];
 }
 // In a story board-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -156,8 +262,59 @@
     LectureVideo* video=self.lecture.videos[indexPath.row];
     NSString *titleText=video.video_name;
     //NSString *status=NSLocalizedstring}
-    NSString *subTitleText=@"Waiting for downloading..";
+    NSString *subTitleText=@"";
+    
     cell.videoNameLabel.text=titleText;
+    if(videosFromDB.count!=0)
+    {
+        for(DownloadLecture *lectureVideo in videosFromDB)
+        {
+            if(lectureVideo.video_id==video.video_id)
+            {
+                float downloadedF, totalF;
+                char prefix;
+                float total=(float)lectureVideo.file_size;
+                float downloaded=(float)lectureVideo.downloaded_size;
+                if (total >= 1024 * 1024 * 1024)
+                {
+                    downloadedF = (float)downloaded / (1024 * 1024 * 1024);
+                    totalF = (float)total / (1024 * 1024 * 1024);
+                    prefix = 'G';
+                }
+                else if (total >= 1024 * 1024)
+                {
+                    downloadedF = (float)downloaded / (1024 * 1024);
+                    totalF = (float)total / (1024 * 1024);
+                    prefix = 'M';
+                }
+                else if (total >= 1024)
+                {
+                    downloadedF = (float)downloaded / 1024;
+                    totalF = (float)total / 1024;
+                    prefix = 'k';
+                }
+                else
+                {
+                    downloadedF = (float)downloaded;
+                    totalF = (float)total;
+                    prefix = '\0';
+                }
+                NSString *progress=NSLocalizedString(@"Download:", nil);
+                NSString *progressDetail = [[NSString alloc] initWithFormat:@"%.2f / %.2f %cB",downloadedF, totalF, prefix];
+                if(lectureVideo.status==kDownloadFinishedStatus)
+                {
+                    progress=[progress stringByAppendingFormat:@" %@",NSLocalizedString(@"Done", nil)];
+                    progress=[progress stringByAppendingFormat:@" %.2f %cB",totalF,prefix];
+                }
+                else
+                {
+                    progress=[progress stringByAppendingFormat:@" %@",progressDetail];
+                }
+                subTitleText=progress;
+                break;
+            }
+        }
+    }
     cell.videoStatusLabel.text=subTitleText;
     //cell.textLabel.text=titleText;
     //cell.statu.text=subTitleText;
@@ -206,7 +363,7 @@
 }
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    NSLog(@"Alert Tag=%d, button index=%d",alertView.tag,buttonIndex);
+    
     if(alertView.tag==10)
     {
         switch(buttonIndex)

@@ -23,6 +23,6 @@
     return self;
 }
 -(void)print{
-    NSLog(@"Category id:%d name:%@ sequence:%d",self.type_id,self.type_name,self.type_sequence);
+    NSLog(@"Category id:%ld name:%@ sequence:%ld",(long)self.type_id,self.type_name,(long)self.type_sequence);
 }
 @end

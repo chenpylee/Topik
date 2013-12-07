@@ -22,6 +22,6 @@
     return self;
 }
 -(void)print{
-    NSLog(@"Language id:%d name:%@ description:%@",self.lang_id,self.lang_name,self.lang_description);
+    //NSLog(@"Language id:%d name:%@ description:%@",self.lang_id,self.lang_name,self.lang_description);
 }
 @end

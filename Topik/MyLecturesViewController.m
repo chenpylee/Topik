@@ -15,14 +15,24 @@
 #import "Downloader.h"
 #import "FeaturedPlaylistCell.h"
 #import "DownloadProgress.h"
+#import "BookmarkLecture.h"
+#import "BookmarkCellView.h"
+#import "UIImageView+WebCache.h"
+#import "FeaturedDetailViewController.h"
+#import "FreeLectureDetailViewController.h"
 @interface MyLecturesViewController ()
 {
     NSInteger _currentSegSeletedIndex;
     DownloadListData* downloadData;
     DownloadLecture* selectedVideo;
+    NSMutableArray* bookmarkLectures;
+    FeaturedLecture* selectedFeaturedLecture;
+    FreeLecture* selectedFreeLecture;
 }
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
 @property (weak, nonatomic) IBOutlet UITableView *tableview;
+@property(nonatomic,strong)UIView* selectedBackgroundView;
+@property(nonatomic,strong)UIImage* placeHolder;
 - (IBAction)segementedValueChanged:(id)sender;
 
 @end
@@ -51,7 +61,9 @@
                                     tabBarTintColor, NSForegroundColorAttributeName,nil];
     self.navigationController.navigationBar.titleTextAttributes = textAttributes;
     self.navigationItem.title=NSLocalizedString(@"My Lectures", nil);
-    
+    self.selectedBackgroundView=[[UIView alloc] init];
+    [self.selectedBackgroundView setBackgroundColor:[AppConfig getTabBarTintColor]];
+    self.placeHolder=[UIImage imageNamed:@"placeholder_default.png"];
     self.tableview.dataSource=self;
     self.tableview.delegate=self;
     
@@ -61,6 +73,7 @@
     [super viewWillAppear:animated];
     [RemoteData updateDownloadProgressFromDisk];
     [self updateDownloadData];
+    [self updateBookMarkData];
     [self.tableview reloadData];
     //register DownloadProgressNotification
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setProgress:) name:kDownloadProgressNotification object:nil];
@@ -89,18 +102,30 @@
     // Dispose of any resources that can be recreated.
 }
 
+-(void)updateBookMarkData{
+    //bookmarkLectures
+    [bookmarkLectures removeAllObjects];
+     bookmarkLectures=[RemoteData loadBookmarkLecturesToArray];
+}
 - (IBAction)segementedValueChanged:(id)sender {
+     _currentSegSeletedIndex=self.segmentedControl.selectedSegmentIndex;
     if(self.segmentedControl.selectedSegmentIndex==0)
     {
         NSLog(@"Download-Control selected");
-        
+        [RemoteData updateDownloadProgressFromDisk];
+        [self.tableview setRowHeight:44];
+        [self updateDownloadData];
+        [self.tableview reloadData];
     }
     else if(self.segmentedControl.selectedSegmentIndex==1)
     {
         NSLog(@"Bookmark-Control selected");
         NSLog(@"tableview height:%f",self.tableview.frame.size.height);
+        [self.tableview setRowHeight:70];
+        [self updateBookMarkData];
+        [self.tableview reloadData];
     }
-    _currentSegSeletedIndex=self.segmentedControl.selectedSegmentIndex;
+   
 }
 #pragma mark-TableView
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -128,7 +153,7 @@
     }
     else if(_currentSegSeletedIndex==1)
     {
-        
+        rowsCount=bookmarkLectures.count;
     }
     return rowsCount;
 }
@@ -143,6 +168,10 @@
         NSString *lecture_title=[downloadData.lectureDictionary valueForKey:lecture_id_str];
         headerTitle=lecture_title;
         
+    }
+    else
+    {
+        headerTitle=@"Bookmark";
     }
     return headerTitle;
     
@@ -214,16 +243,40 @@
         }
         cell.videoNameLabel.text=titleText;
         cell.videoStatusLabel.text=progress;
+        cell.selectedBackgroundView=self.selectedBackgroundView;
         return cell;
     }
     else
     {
-        UITableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:BookmarkCellIdentifier];
+        BookmarkCellView *cell=nil;
+        cell = [tableView dequeueReusableCellWithIdentifier:BookmarkCellIdentifier];
+        // Configure the cell...
         if(!cell)
         {
+            NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"BookmarkCell" owner:self options:nil];
+            cell = [nib objectAtIndex:0];
             
         }
+        BookmarkLecture *lecture=bookmarkLectures[indexPath.row];
+        //cell.thumbImageview.image=[UIImage imageNamed:@"sample_thumbnail.png"];
+        cell.titleLabel.text=lecture.lecture_title;
+        cell.countLabel.text=[NSString stringWithFormat:@"%lld",(long long)lecture.video_count];
+        //cell.selectedBackgroundView=self.selectedBackgroundView;
+        UIImage *placeholder=nil;
+        placeholder=self.placeHolder;
+        if(![lecture.lecture_img isEqualToString:@""])
+        {
+            [cell.thumbImageview setImageWithURL:[NSURL URLWithString:lecture.lecture_img]
+                                placeholderImage:placeholder];
+        }
+        else
+        {
+            cell.thumbImageview.image=placeholder;
+        }
+        cell.selectedBackgroundView=self.selectedBackgroundView;
+        cell.accessoryType=UITableViewCellSelectionStyleNone;
         return cell;
+
     }
     return nil;
 }
@@ -330,6 +383,18 @@
             
         }
     }
+    else{
+        if (editingStyle == UITableViewCellEditingStyleDelete)
+        {
+            BookmarkLecture *selectedLecture=bookmarkLectures[indexPath.row];
+            [RemoteData RemoveBookmarkByLectureId:selectedLecture.lecture_id isPaid:selectedLecture.is_paid];
+            [self updateBookMarkData];
+            [tableView reloadData];
+            //[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationRight];
+            
+        }
+
+    }
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -347,7 +412,18 @@
     }
     else if(_currentSegSeletedIndex==1)
     {
-        
+        BookmarkLecture *selectedLecture=bookmarkLectures[indexPath.row];
+        if(selectedLecture.is_paid)
+        {
+            //selectedFeaturedLecture=[RemoteData load];
+            selectedFeaturedLecture=[RemoteData getFeaturedLectureByLectureID:selectedLecture.lecture_id];
+            [self performSegueWithIdentifier:@"BookmarkFeaturedSegue" sender:self];
+        }
+        else
+        {
+            selectedFreeLecture=[RemoteData getFreeLectureByLectureID:selectedLecture.lecture_id];
+            [self performSegueWithIdentifier:@"BookmarkFreeSegue" sender:self];
+        }
     }
 
 }
@@ -365,6 +441,16 @@
     {
         DownloadVideoDetailViewController *videoController=[segue destinationViewController];
         videoController.selectedVideo=selectedVideo;
+    }
+    if([[segue identifier] isEqualToString:@"BookmarkFeaturedSegue"])
+    {
+        FeaturedDetailViewController *videoController=[segue destinationViewController];
+        videoController.lecture=selectedFeaturedLecture;
+    }
+    if([[segue identifier] isEqualToString:@"BookmarkFreeSegue"])
+    {
+        FreeLectureDetailViewController *videoController=[segue destinationViewController];
+        videoController.lecture=selectedFreeLecture;
     }
 }
 

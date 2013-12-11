@@ -34,6 +34,7 @@
     if (self) {
         // Custom initialization
         NSLog(@"load featured lectures data");
+        _lang_id=0;
     }
     return self;
 }
@@ -53,14 +54,16 @@
     
     self.navigationController.navigationBar.titleTextAttributes = textAttributes;
     //self.navigationController.title=@"nav title";
+    /**
     UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refreshTable)];
     self.navigationItem.rightBarButtonItem = refreshButton;
+     **/
     self.navigationItem.title=NSLocalizedString(@"Featured Lectures", nil);
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     //Load lectures
     [self.tableView setRowHeight:70];
-    self.lectures=[RemoteData loadFeaturedLecturesToArray];
+    self.lectures=[RemoteData loadFeaturedLecturesToArrayByLang:self.lang_id];
     self.selectedBackgroundView=[[UIView alloc] init];
     [self.selectedBackgroundView setBackgroundColor:[AppConfig getTabBarTintColor]];
     

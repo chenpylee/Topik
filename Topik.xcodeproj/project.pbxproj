@@ -19,6 +19,15 @@
 		C611356018498F900019706B /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C66567D21840DDBC003BF7AB /* Default-568h@2x.png */; };
 		C611356318498FDA0019706B /* BookmarkLecture.m in Sources */ = {isa = PBXBuildFile; fileRef = C611356218498FDA0019706B /* BookmarkLecture.m */; };
 		C611356D184AE4A30019706B /* DownloadLecture.m in Sources */ = {isa = PBXBuildFile; fileRef = C611356C184AE4A30019706B /* DownloadLecture.m */; };
+		C63EFF86185807F900BBF463 /* placeholder_default.png in Resources */ = {isa = PBXBuildFile; fileRef = C63EFF84185807F900BBF463 /* placeholder_default.png */; };
+		C63EFF87185807F900BBF463 /* placeholder_default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C63EFF85185807F900BBF463 /* placeholder_default@2x.png */; };
+		C63EFF8F18580AB700BBF463 /* BookmarkCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = C63EFF8E18580AB700BBF463 /* BookmarkCellView.m */; };
+		C63EFF911858134300BBF463 /* BookmarkCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C63EFF901858134300BBF463 /* BookmarkCell.xib */; };
+		C63EFF9418586FA500BBF463 /* AllLecturesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C63EFF9318586FA500BBF463 /* AllLecturesViewController.m */; };
+		C63EFF9718588EA000BBF463 /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C63EFF9618588EA000BBF463 /* SettingViewController.m */; };
+		C6542927185416D900B81E67 /* FreeCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = C6542926185416D900B81E67 /* FreeCellView.m */; };
+		C654292A1854179300B81E67 /* FreeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C65429291854179300B81E67 /* FreeViewController.m */; };
+		C654292D1854253A00B81E67 /* FreeLectureDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C654292C1854253A00B81E67 /* FreeLectureDetailViewController.m */; };
 		C6596613184099A4001F0B00 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = C6596612184099A4001F0B00 /* Reachability.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		C659661518409ACB001F0B00 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C659661418409ACB001F0B00 /* CFNetwork.framework */; };
 		C659661718409ADC001F0B00 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C659661618409ADC001F0B00 /* SystemConfiguration.framework */; };
@@ -58,7 +67,6 @@
 		C665683C184343DA003BF7AB /* FICImageTableEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = C6656834184343DA003BF7AB /* FICImageTableEntry.m */; };
 		C665683D184343DA003BF7AB /* FICUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = C6656837184343DA003BF7AB /* FICUtilities.m */; };
 		C66568411843FEE0003BF7AB /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C66568401843FEE0003BF7AB /* ImageIO.framework */; };
-		C665685618440929003BF7AB /* FreeTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C665685518440929003BF7AB /* FreeTableViewController.m */; };
 		C665685C184412DD003BF7AB /* horizontal_divider.png in Resources */ = {isa = PBXBuildFile; fileRef = C665685A184412DD003BF7AB /* horizontal_divider.png */; };
 		C665685D184412DD003BF7AB /* horizontal_divider@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C665685B184412DD003BF7AB /* horizontal_divider@2x.png */; };
 		C665687218441C09003BF7AB /* icon_bookmark_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = C665686A18441C09003BF7AB /* icon_bookmark_selected.png */; };
@@ -93,6 +101,8 @@
 		C67EAFAC18536F9200F8B1C6 /* placeholder_6@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C67EAFA218536F9200F8B1C6 /* placeholder_6@2x.png */; };
 		C67EAFAD18536F9200F8B1C6 /* placeholder_9.png in Resources */ = {isa = PBXBuildFile; fileRef = C67EAFA318536F9200F8B1C6 /* placeholder_9.png */; };
 		C67EAFAE18536F9200F8B1C6 /* placeholder_10@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C67EAFA418536F9200F8B1C6 /* placeholder_10@2x.png */; };
+		C67EAFBA18540B7500F8B1C6 /* FreeLecture.m in Sources */ = {isa = PBXBuildFile; fileRef = C67EAFB918540B7500F8B1C6 /* FreeLecture.m */; };
+		C67EAFBC18540F7A00F8B1C6 /* LectureDB.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = C67EAFBB18540F3800F8B1C6 /* LectureDB.sqlite */; };
 		C6A1733C184D68DB00222C29 /* Downloader.m in Sources */ = {isa = PBXBuildFile; fileRef = C6A1733B184D68DB00222C29 /* Downloader.m */; };
 		C6A1733F184DB71100222C29 /* DownloadProgress.m in Sources */ = {isa = PBXBuildFile; fileRef = C6A1733E184DB71100222C29 /* DownloadProgress.m */; };
 		C6A68B5C1840747C007A3B63 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6A68B5B1840747C007A3B63 /* Foundation.framework */; };
@@ -136,7 +146,6 @@
 		C6CA04BD184B06ED00082DB1 /* FeaturedVideoDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C6CA04BC184B06ED00082DB1 /* FeaturedVideoDetailViewController.m */; };
 		C6CA04C3184B195900082DB1 /* MyLecturesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C6CA04C2184B195900082DB1 /* MyLecturesViewController.m */; };
 		C6CA04C6184B295900082DB1 /* DownloadListData.m in Sources */ = {isa = PBXBuildFile; fileRef = C6CA04C5184B295900082DB1 /* DownloadListData.m */; };
-		C6CA04C8184B3A3900082DB1 /* LectureDB.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = C6CA04C7184B3A3900082DB1 /* LectureDB.sqlite */; };
 		C6CA04CB184B3D1400082DB1 /* DownloadVideoDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C6CA04CA184B3D1400082DB1 /* DownloadVideoDetailViewController.m */; };
 		C6DFAC9B1845A13F004D81C0 /* LandscapeSupportedMPMoviePlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = C6DFAC9A1845A13F004D81C0 /* LandscapeSupportedMPMoviePlayerController.m */; };
 		C6DFACA31845D315004D81C0 /* FeaturedPlaylistCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C6DFACA21845D315004D81C0 /* FeaturedPlaylistCell.xib */; };
@@ -168,6 +177,21 @@
 		C611356218498FDA0019706B /* BookmarkLecture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BookmarkLecture.m; sourceTree = "<group>"; };
 		C611356B184AE4A30019706B /* DownloadLecture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadLecture.h; sourceTree = "<group>"; };
 		C611356C184AE4A30019706B /* DownloadLecture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadLecture.m; sourceTree = "<group>"; };
+		C63EFF84185807F900BBF463 /* placeholder_default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = placeholder_default.png; sourceTree = "<group>"; };
+		C63EFF85185807F900BBF463 /* placeholder_default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder_default@2x.png"; sourceTree = "<group>"; };
+		C63EFF8D18580AB700BBF463 /* BookmarkCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BookmarkCellView.h; sourceTree = "<group>"; };
+		C63EFF8E18580AB700BBF463 /* BookmarkCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BookmarkCellView.m; sourceTree = "<group>"; };
+		C63EFF901858134300BBF463 /* BookmarkCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = BookmarkCell.xib; path = ../BookmarkCell.xib; sourceTree = "<group>"; };
+		C63EFF9218586FA500BBF463 /* AllLecturesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AllLecturesViewController.h; sourceTree = "<group>"; };
+		C63EFF9318586FA500BBF463 /* AllLecturesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AllLecturesViewController.m; sourceTree = "<group>"; };
+		C63EFF9518588EA000BBF463 /* SettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingViewController.h; sourceTree = "<group>"; };
+		C63EFF9618588EA000BBF463 /* SettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingViewController.m; sourceTree = "<group>"; };
+		C6542925185416D900B81E67 /* FreeCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FreeCellView.h; sourceTree = "<group>"; };
+		C6542926185416D900B81E67 /* FreeCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FreeCellView.m; sourceTree = "<group>"; };
+		C65429281854179300B81E67 /* FreeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FreeViewController.h; sourceTree = "<group>"; };
+		C65429291854179300B81E67 /* FreeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FreeViewController.m; sourceTree = "<group>"; };
+		C654292B1854253A00B81E67 /* FreeLectureDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FreeLectureDetailViewController.h; sourceTree = "<group>"; };
+		C654292C1854253A00B81E67 /* FreeLectureDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FreeLectureDetailViewController.m; sourceTree = "<group>"; };
 		C6596611184099A3001F0B00 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		C6596612184099A4001F0B00 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		C659661418409ACB001F0B00 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
@@ -241,8 +265,6 @@
 		C6656836184343DA003BF7AB /* FICUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FICUtilities.h; sourceTree = "<group>"; };
 		C6656837184343DA003BF7AB /* FICUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FICUtilities.m; sourceTree = "<group>"; };
 		C66568401843FEE0003BF7AB /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
-		C665685418440929003BF7AB /* FreeTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FreeTableViewController.h; sourceTree = "<group>"; };
-		C665685518440929003BF7AB /* FreeTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FreeTableViewController.m; sourceTree = "<group>"; };
 		C665685A184412DD003BF7AB /* horizontal_divider.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = horizontal_divider.png; sourceTree = "<group>"; };
 		C665685B184412DD003BF7AB /* horizontal_divider@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "horizontal_divider@2x.png"; sourceTree = "<group>"; };
 		C665686A18441C09003BF7AB /* icon_bookmark_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_bookmark_selected.png; sourceTree = "<group>"; };
@@ -292,6 +314,9 @@
 		C67EAFA218536F9200F8B1C6 /* placeholder_6@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder_6@2x.png"; sourceTree = "<group>"; };
 		C67EAFA318536F9200F8B1C6 /* placeholder_9.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = placeholder_9.png; sourceTree = "<group>"; };
 		C67EAFA418536F9200F8B1C6 /* placeholder_10@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder_10@2x.png"; sourceTree = "<group>"; };
+		C67EAFB818540B7500F8B1C6 /* FreeLecture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FreeLecture.h; sourceTree = "<group>"; };
+		C67EAFB918540B7500F8B1C6 /* FreeLecture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FreeLecture.m; sourceTree = "<group>"; };
+		C67EAFBB18540F3800F8B1C6 /* LectureDB.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = LectureDB.sqlite; sourceTree = "<group>"; };
 		C6A1733A184D68DB00222C29 /* Downloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Downloader.h; sourceTree = "<group>"; };
 		C6A1733B184D68DB00222C29 /* Downloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Downloader.m; sourceTree = "<group>"; };
 		C6A1733D184DB71100222C29 /* DownloadProgress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadProgress.h; sourceTree = "<group>"; };
@@ -361,7 +386,6 @@
 		C6CA04C2184B195900082DB1 /* MyLecturesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyLecturesViewController.m; sourceTree = "<group>"; };
 		C6CA04C4184B295900082DB1 /* DownloadListData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadListData.h; sourceTree = "<group>"; };
 		C6CA04C5184B295900082DB1 /* DownloadListData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadListData.m; sourceTree = "<group>"; };
-		C6CA04C7184B3A3900082DB1 /* LectureDB.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = LectureDB.sqlite; sourceTree = "<group>"; };
 		C6CA04C9184B3D1400082DB1 /* DownloadVideoDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadVideoDetailViewController.h; sourceTree = "<group>"; };
 		C6CA04CA184B3D1400082DB1 /* DownloadVideoDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadVideoDetailViewController.m; sourceTree = "<group>"; };
 		C6DFAC991845A13F004D81C0 /* LandscapeSupportedMPMoviePlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LandscapeSupportedMPMoviePlayerController.h; sourceTree = "<group>"; };
@@ -443,6 +467,8 @@
 				C6CA04C5184B295900082DB1 /* DownloadListData.m */,
 				C6A1733D184DB71100222C29 /* DownloadProgress.h */,
 				C6A1733E184DB71100222C29 /* DownloadProgress.m */,
+				C67EAFB818540B7500F8B1C6 /* FreeLecture.h */,
+				C67EAFB918540B7500F8B1C6 /* FreeLecture.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -475,6 +501,8 @@
 		C665681018431F98003BF7AB /* icon */ = {
 			isa = PBXGroup;
 			children = (
+				C63EFF84185807F900BBF463 /* placeholder_default.png */,
+				C63EFF85185807F900BBF463 /* placeholder_default@2x.png */,
 				C665686A18441C09003BF7AB /* icon_bookmark_selected.png */,
 				C665686B18441C09003BF7AB /* icon_bookmark_selected@2x.png */,
 				C665686C18441C09003BF7AB /* icon_bookmark_unselected.png */,
@@ -640,8 +668,6 @@
 				C6A68BB01840890A007A3B63 /* FeatureTableViewController.m */,
 				C665681818432EF6003BF7AB /* FeaturedCellView.h */,
 				C665681918432EF6003BF7AB /* FeaturedCellView.m */,
-				C665685418440929003BF7AB /* FreeTableViewController.h */,
-				C665685518440929003BF7AB /* FreeTableViewController.m */,
 				C6F3CCAC18458517003B2841 /* FeaturedDetailViewController.h */,
 				C6F3CCAD18458517003B2841 /* FeaturedDetailViewController.m */,
 				C6CA04BB184B06ED00082DB1 /* FeaturedVideoDetailViewController.h */,
@@ -653,8 +679,21 @@
 				C6DFAC9A1845A13F004D81C0 /* LandscapeSupportedMPMoviePlayerController.m */,
 				C6CA04C1184B195900082DB1 /* MyLecturesViewController.h */,
 				C6CA04C2184B195900082DB1 /* MyLecturesViewController.m */,
+				C63EFF901858134300BBF463 /* BookmarkCell.xib */,
+				C63EFF8D18580AB700BBF463 /* BookmarkCellView.h */,
+				C63EFF8E18580AB700BBF463 /* BookmarkCellView.m */,
 				C6CA04C9184B3D1400082DB1 /* DownloadVideoDetailViewController.h */,
 				C6CA04CA184B3D1400082DB1 /* DownloadVideoDetailViewController.m */,
+				C6542925185416D900B81E67 /* FreeCellView.h */,
+				C6542926185416D900B81E67 /* FreeCellView.m */,
+				C65429281854179300B81E67 /* FreeViewController.h */,
+				C65429291854179300B81E67 /* FreeViewController.m */,
+				C654292B1854253A00B81E67 /* FreeLectureDetailViewController.h */,
+				C654292C1854253A00B81E67 /* FreeLectureDetailViewController.m */,
+				C63EFF9218586FA500BBF463 /* AllLecturesViewController.h */,
+				C63EFF9318586FA500BBF463 /* AllLecturesViewController.m */,
+				C63EFF9518588EA000BBF463 /* SettingViewController.h */,
+				C63EFF9618588EA000BBF463 /* SettingViewController.m */,
 				C6A68B731840747C007A3B63 /* Images.xcassets */,
 				C6A68B621840747C007A3B63 /* Supporting Files */,
 				C6A68BAA18407EEF007A3B63 /* config.plist */,
@@ -665,7 +704,7 @@
 		C6A68B621840747C007A3B63 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				C6CA04C7184B3A3900082DB1 /* LectureDB.sqlite */,
+				C67EAFBB18540F3800F8B1C6 /* LectureDB.sqlite */,
 				C665682518434018003BF7AB /* Localizable.strings */,
 				C665681018431F98003BF7AB /* icon */,
 				C665680D18431E65003BF7AB /* sample */,
@@ -834,6 +873,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C67EAFBC18540F7A00F8B1C6 /* LectureDB.sqlite in Resources */,
 				C67EAFA718536F9200F8B1C6 /* placeholder_10.png in Resources */,
 				C611356018498F900019706B /* Default-568h@2x.png in Resources */,
 				C611355F18498F770019706B /* Default@2x.png in Resources */,
@@ -846,11 +886,13 @@
 				C67EAFA818536F9200F8B1C6 /* placeholder_8.png in Resources */,
 				C6A68BAB18407EEF007A3B63 /* config.plist in Resources */,
 				C6A68BA0184078D6007A3B63 /* feature@2x.png in Resources */,
+				C63EFF86185807F900BBF463 /* placeholder_default.png in Resources */,
 				C665685D184412DD003BF7AB /* horizontal_divider@2x.png in Resources */,
 				C6DFACA31845D315004D81C0 /* FeaturedPlaylistCell.xib in Resources */,
 				C6A68B741840747C007A3B63 /* Images.xcassets in Resources */,
 				C6A68B661840747C007A3B63 /* InfoPlist.strings in Resources */,
 				C66567BA1840D254003BF7AB /* splesh_480h.png in Resources */,
+				C63EFF87185807F900BBF463 /* placeholder_default@2x.png in Resources */,
 				C6A68B9F184078D6007A3B63 /* feature.png in Resources */,
 				C66567C81840D86B003BF7AB /* App_ICON120.png in Resources */,
 				C67EAFAD18536F9200F8B1C6 /* placeholder_9.png in Resources */,
@@ -882,6 +924,7 @@
 				C665681F18433B4D003BF7AB /* icon_dislouser_indicator.png in Resources */,
 				C611355918498CC50019706B /* topik_placeholder_3.png in Resources */,
 				C611355A18498CC50019706B /* topik_placeholder_3@2x.png in Resources */,
+				C63EFF911858134300BBF463 /* BookmarkCell.xib in Resources */,
 				C67EAFAC18536F9200F8B1C6 /* placeholder_6@2x.png in Resources */,
 				C6A68B9D184078D6007A3B63 /* all.png in Resources */,
 				C6A68BA2184078D6007A3B63 /* free@2x.png in Resources */,
@@ -889,7 +932,6 @@
 				C6A68B9E184078D6007A3B63 /* all@2x.png in Resources */,
 				C665687418441C09003BF7AB /* icon_bookmark_unselected.png in Resources */,
 				C665682018433B4D003BF7AB /* icon_dislouser_indicator@2x.png in Resources */,
-				C6CA04C8184B3A3900082DB1 /* LectureDB.sqlite in Resources */,
 				C67EAFA618536F9200F8B1C6 /* placeholder_11@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -915,9 +957,11 @@
 				C67EAF951852D69700F8B1C6 /* SDWebImagePrefetcher.m in Sources */,
 				C66568041842EA55003BF7AB /* FMResultSet.m in Sources */,
 				C67EAF991852D69700F8B1C6 /* UIImage+WebP.m in Sources */,
+				C6542927185416D900B81E67 /* FreeCellView.m in Sources */,
 				C6DFACA61845D4E8004D81C0 /* FeaturedPlaylistCell.m in Sources */,
 				C67EAF8D1852D69700F8B1C6 /* MKAnnotationView+WebCache.m in Sources */,
 				C67EAF8E1852D69700F8B1C6 /* NSData+GIF.m in Sources */,
+				C63EFF8F18580AB700BBF463 /* BookmarkCellView.m in Sources */,
 				C6F3CCAE18458517003B2841 /* FeaturedDetailViewController.m in Sources */,
 				C665683D184343DA003BF7AB /* FICUtilities.m in Sources */,
 				C665683A184343DA003BF7AB /* FICImageTable.m in Sources */,
@@ -925,6 +969,8 @@
 				C67EAF921852D69700F8B1C6 /* SDWebImageDownloader.m in Sources */,
 				C67EAF9A1852D69700F8B1C6 /* UIImageView+WebCache.m in Sources */,
 				C67EAF931852D69700F8B1C6 /* SDWebImageDownloaderOperation.m in Sources */,
+				C654292A1854179300B81E67 /* FreeViewController.m in Sources */,
+				C63EFF9718588EA000BBF463 /* SettingViewController.m in Sources */,
 				C67EAF971852D69700F8B1C6 /* UIImage+GIF.m in Sources */,
 				C6A68BD0184096B3007A3B63 /* ASIInputStream.m in Sources */,
 				C6CA04CB184B3D1400082DB1 /* DownloadVideoDetailViewController.m in Sources */,
@@ -941,10 +987,10 @@
 				C6CA04BD184B06ED00082DB1 /* FeaturedVideoDetailViewController.m in Sources */,
 				C67EAF961852D69700F8B1C6 /* UIButton+WebCache.m in Sources */,
 				C665683B184343DA003BF7AB /* FICImageTableChunk.m in Sources */,
+				C63EFF9418586FA500BBF463 /* AllLecturesViewController.m in Sources */,
 				C6A68BCF184096B3007A3B63 /* ASIHTTPRequest.m in Sources */,
 				C6A68BA918407ABB007A3B63 /* MainTabBarController.m in Sources */,
 				C66568011842EA55003BF7AB /* FMDatabasePool.m in Sources */,
-				C665685618440929003BF7AB /* FreeTableViewController.m in Sources */,
 				C66567E31841FF61003BF7AB /* LectureBasic.m in Sources */,
 				C6A1733F184DB71100222C29 /* DownloadProgress.m in Sources */,
 				C6A68BCC184096B3007A3B63 /* ASIDataDecompressor.m in Sources */,
@@ -964,12 +1010,14 @@
 				C6656817184322CA003BF7AB /* FeaturedLecture.m in Sources */,
 				C6A68BCE184096B3007A3B63 /* ASIFormDataRequest.m in Sources */,
 				C67EAF981852D69700F8B1C6 /* UIImage+MultiFormat.m in Sources */,
+				C67EAFBA18540B7500F8B1C6 /* FreeLecture.m in Sources */,
 				C6A1733C184D68DB00222C29 /* Downloader.m in Sources */,
 				C66568071842EBAB003BF7AB /* RemoteData.m in Sources */,
 				C67EAF8F1852D69700F8B1C6 /* SDImageCache.m in Sources */,
 				C6DFAC9B1845A13F004D81C0 /* LandscapeSupportedMPMoviePlayerController.m in Sources */,
 				C6CA04C3184B195900082DB1 /* MyLecturesViewController.m in Sources */,
 				C6A68B681840747C007A3B63 /* main.m in Sources */,
+				C654292D1854253A00B81E67 /* FreeLectureDetailViewController.m in Sources */,
 				C66568001842EA55003BF7AB /* FMDatabaseAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

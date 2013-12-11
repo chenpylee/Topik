@@ -14,9 +14,14 @@
 #import "LectureVideo.h"
 #import "DownloadListData.h"
 #import "DownloadLecture.h"
+#import "FreeLecture.h"
 @interface RemoteData : NSObject
 +(BOOL)processTotalJsonData:(NSData *)data;
 +(NSMutableArray *)loadFeaturedLecturesToArray;
++(NSMutableArray*)loadFeaturedLecturesToArrayByLang:(NSInteger)lang_id;
++(NSMutableArray*)loadFreeLecturesToArrayByLang:(NSInteger)lang_id;
++(NSMutableArray *)loadFreeLecturesToArray;
++(NSMutableArray *)loadBookmarkLecturesToArray;
 +(void)InsertFeaturedLectureBookmark:(FeaturedLecture*)featuredLecture;
 +(BOOL)FeaturedLectureExistsInBookmark:(FeaturedLecture*)featuredLecture;
 +(void)RemoveFeaturedLectureFromBookmark:(FeaturedLecture*)featuredLecture;
@@ -36,4 +41,11 @@
 +(void)updateFileSizeForVideoID:(NSInteger)videoID withFileSize:(long long)totalSize;
 +(void)updateDownloadProgressFromDisk;
 +(NSMutableArray *)loadDownloadingVideoListForFeaturedLecture:(FeaturedLecture*)lecture;
++(BOOL)FreeLectureExistsInBookmark:(FreeLecture*)freeLecture;
++(void)InsertFreeLectureBookmark:(FreeLecture*)freeLecture;
++(void)RemoveFreeLectureFromBookmark:(FreeLecture*)freeLecture;
++(void)RemoveBookmarkByLectureId:(NSInteger)lecture_id isPaid:(BOOL)is_paid;
++(FeaturedLecture*)getFeaturedLectureByLectureID:(NSInteger)lecture_id;
++(FreeLecture*)getFreeLectureByLectureID:(NSInteger)lecture_id;
++(NSMutableArray*)loadLanguagesToArray;
 @end

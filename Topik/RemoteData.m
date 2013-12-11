@@ -45,7 +45,42 @@
         NSArray* jsonLevels = [json objectForKey:@"levels"]; //lecture levels setting
         NSArray* jsonSamples= [json objectForKey:@"lecture_samples"]; //lecture sample videos
         NSArray* jsonBasics= [json objectForKey:@"lecture_basics"]; //lecture basic information
-        NSArray* jsonVideos= [json objectForKey:@"lecture_videos"]; //lecture basic information
+        NSArray* jsonVideos= [json objectForKey:@"lecture_videos"]; //lecture video information
+        //free_lectures
+        NSArray* jsonFrees= [json objectForKey:@"free_lectures"]; //free_lectures
+        NSMutableArray *freeLectures=[[NSMutableArray alloc] init];
+        /**
+         "free_id": "20",
+         "free_title": "sfdfdffdfdf",
+         "lecture_lang": "10",
+         "lecture_type": "10",
+         "free_link": "http://v.youku.com/v_show/id_XNjIwMDA0MDA4.html",
+         "free_host": "v.youku.com",
+         "free_vid": "XNjIwMDA0MDA4",
+         "free_img": "http://bcs.duapp.com/topikexam/sample/1386423797_home_wifi.jpg",
+         "free_status": "2",
+         "free_created": "2013-12-07 22:43:18",
+         "free_updated": "2013-12-07 22:43:25"
+         **/
+        for(id object in jsonFrees)
+        {
+            NSDictionary* dictionary=(NSDictionary*)object;
+            NSInteger free_id=[[dictionary objectForKey:@"free_id"] intValue];
+            NSString *free_title=[dictionary objectForKey:@"free_title"];
+            NSInteger lecture_lang=[[dictionary objectForKey:@"lecture_lang"] intValue];
+            NSInteger lecture_type=[[dictionary objectForKey:@"lecture_type"] intValue];
+            NSString *free_link=[dictionary objectForKey:@"free_link"];
+            NSString *free_host=[dictionary objectForKey:@"free_host"];
+            NSString *free_vid=[dictionary objectForKey:@"free_vid"];
+            NSString *free_img=[dictionary objectForKey:@"free_img"];
+            free_img=[free_img stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            NSInteger free_status=[[dictionary objectForKey:@"free_status"] intValue];
+
+            NSString *free_created=[dictionary objectForKey:@"free_created"];
+            NSString *free_updated=[dictionary objectForKey:@"free_updated"];
+            FreeLecture *free=[[FreeLecture alloc]initWithFreeID:free_id title:free_title lang:lecture_lang type:lecture_type link:free_link host:free_host vid:free_vid img:free_img status:free_status created:free_created updated:free_updated];
+            [freeLectures addObject:free];
+        }
         //lecture languages
         NSMutableArray *lectureLanguages=[[NSMutableArray alloc] init];
         for(id object in jsonLanguages)
@@ -190,7 +225,7 @@
                 //clear old data and insert new ones
                 //topik_lang            topik_lecture_cat     topik_lecture_sample
                 //topik_lecture_basic   topik_lecture_level   topik_lecture_video
-                NSArray *tableArray=[NSArray arrayWithObjects:@"topik_lang",@"topik_lecture_cat", @"topik_lecture_level",@"topik_lecture_basic",@"topik_lecture_sample",@"topik_lecture_video",nil];
+                NSArray *tableArray=[NSArray arrayWithObjects:@"topik_lang",@"topik_lecture_cat", @"topik_lecture_level",@"topik_lecture_basic",@"topik_lecture_sample",@"topik_lecture_video",@"topik_free_lecture",nil];
                 for(id object in tableArray)
                 {
                     NSString *tableName=(NSString *)object;
@@ -359,19 +394,59 @@
                         NSLog(@"INSERT INTO Table:%@ Err %d: %@", @"topik_lecture_sample",[db lastErrorCode], [db lastErrorMessage]);
                     }
                 }
-                //print out sample video information
                 /**
-                s = [db executeQuery:@"SELECT * FROM topik_lecture_sample"];
-                while ([s next]) {
-                    int sv_id=[s intForColumn:@"sv_id"];
-                    int lecture_id=[s intForColumn:@"lecture_id"];
-                    NSString *sv_url=[s stringForColumn:@"sv_url"];
-                    NSString *sv_host=[s stringForColumn:@"sv_host"];
-                    NSString *sv_vid=[s stringForColumn:@"sv_vid"];
-                    NSString *sv_img=[s stringForColumn:@"sv_img"];
-                    NSLog(@"topik_lecture_sample: sv_id=%d, lecture_id=%d,sv_url=%@, sv_host=%@,  sv_vid=%@,sv_img=%@",sv_id,lecture_id,sv_url,sv_host,sv_vid,sv_img);
-                }
+                 "free_id": "20",
+                 "free_title": "sfdfdffdfdf",
+                 "lecture_lang": "10",
+                 "lecture_type": "10",
+                 "free_link": "http://v.youku.com/v_show/id_XNjIwMDA0MDA4.html",
+                 "free_host": "v.youku.com",
+                 "free_vid": "XNjIwMDA0MDA4",
+                 "free_img": "http://bcs.duapp.com/topikexam/sample/1386423797_home_wifi.jpg",
+                 "free_status": "2",
+                 "free_created": "2013-12-07 22:43:18",
+                 "free_updated": "2013-12-07 22:43:25"
                  **/
+
+                for(id freeLecture in freeLectures)
+                {
+                    FreeLecture *lecture=(FreeLecture*)freeLecture;
+                    [db executeUpdate:@"INSERT INTO topik_free_lecture(free_id,free_title,lecture_lang,lecture_type,free_link,free_host,free_vid,free_img,free_status,free_created,free_updated) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+                     [NSNumber numberWithInteger:lecture.free_id],
+                     lecture.free_title,
+                     [NSNumber numberWithInteger:lecture.lecture_lang],
+                     [NSNumber numberWithInteger:lecture.lecture_type],
+                     lecture.free_link,
+                     lecture.free_host,
+                     lecture.free_vid,
+                     lecture.free_img,
+                     [NSNumber numberWithInteger:lecture.free_status],
+                     lecture.free_created,
+                     lecture.free_updated
+                     ];
+                    if ([db hadError]) {
+                        NSLog(@"INSERT INTO Table:%@ Err %d: %@", @"topik_lecture_sample",[db lastErrorCode], [db lastErrorMessage]);
+                    }
+
+                }
+                //print out free lecture video information
+                /**
+                s = [db executeQuery:@"SELECT * FROM topik_free_lecture"];
+                while ([s next]) {
+                    NSInteger  free_id=[s intForColumn:@"free_id"];
+                    NSInteger lecture_lang=[s intForColumn:@"lecture_lang"];
+                    NSInteger lecture_type=[s intForColumn:@"lecture_type"];
+                    NSString *free_title=[s stringForColumn:@"free_title"];
+                    NSString *free_link=[s stringForColumn:@"free_link"];
+                    NSString *free_host=[s stringForColumn:@"free_host"];
+                    NSString *free_vid=[s stringForColumn:@"free_vid"];
+                    NSString *free_img=[s stringForColumn:@"free_img"];
+                    NSInteger free_status=[s intForColumn:@"free_status"];
+                    NSString *free_created=[s stringForColumn:@"free_created"];
+                    NSString *free_updated=[s stringForColumn:@"free_updated"];
+                    NSLog(@"topik_free_lecture: free_id=%d, lecture_lang=%d,lecture_type=%d,free_status=%d, free_title=%@, free_link=%@, free_host=%@, free_vid=%@, free_img=%@, free_created=%@, free_updated=%@ ",free_id,lecture_lang,lecture_type,free_status,free_title,free_link,free_host,free_vid,free_img,free_created,free_updated);
+                }
+                **/
 
             }
             [db close];
@@ -382,6 +457,119 @@
         [[NSNotificationCenter defaultCenter]postNotificationName:APP_NOTIFICATION_TOTAL_DATA_LOADED object:nil];
         return processSuccess;
     }
+}
++(FreeLecture*)getFreeLectureByLectureID:(NSInteger)lecture_id{
+    FreeLecture *freeLecture=nil;
+    NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsPath = [paths objectAtIndex:0];
+    NSString *dbPath = [docsPath stringByAppendingPathComponent:@"LectureDB.sqlite"];
+    NSLog(@"dbPath:%@",dbPath);
+    FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
+    if (![db open]) {
+        NSLog(@"Could not open db. when loadFeaturedLecturesToArray");
+    }
+    else
+    {
+        NSString *query=[NSString stringWithFormat:@"SELECT * FROM topik_free_lecture Where free_id=%ld",(long)lecture_id];
+        FMResultSet *s = [db executeQuery:query];
+        while ([s next]) {
+            NSInteger  free_id=[s intForColumn:@"free_id"];
+            NSInteger lecture_lang=[s intForColumn:@"lecture_lang"];
+            NSInteger lecture_type=[s intForColumn:@"lecture_type"];
+            NSString *free_title=[s stringForColumn:@"free_title"];
+            NSString *free_link=[s stringForColumn:@"free_link"];
+            NSString *free_host=[s stringForColumn:@"free_host"];
+            NSString *free_vid=[s stringForColumn:@"free_vid"];
+            NSString *free_img=[s stringForColumn:@"free_img"];
+            NSInteger free_status=[s intForColumn:@"free_status"];
+            NSString *free_created=[s stringForColumn:@"free_created"];
+            NSString *free_updated=[s stringForColumn:@"free_updated"];
+            freeLecture=[[FreeLecture alloc]initWithFreeID:free_id title:free_title lang:lecture_lang type:lecture_type link:free_link host:free_host vid:free_vid img:free_img status:free_status created:free_created updated:free_updated];
+            break;
+        }
+        
+        
+        
+    }
+    [db close];
+    return freeLecture;
+
+}
++(FeaturedLecture*)getFeaturedLectureByLectureID:(NSInteger)lecture_id{
+    FeaturedLecture *featuredLecture=nil;
+    NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsPath = [paths objectAtIndex:0];
+    NSString *dbPath = [docsPath stringByAppendingPathComponent:@"LectureDB.sqlite"];
+    NSLog(@"dbPath:%@",dbPath);
+    FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
+    if (![db open]) {
+        NSLog(@"Could not open db. when loadFeaturedLecturesToArray");
+    }
+    else
+    {
+        NSString *query=[NSString stringWithFormat:@"SELECT * FROM topik_lecture_basic Where lecture_id=%ld",(long)lecture_id];
+        FMResultSet *s = [db executeQuery:query];
+        while ([s next]) {
+            int lecture_id=[s intForColumn:@"lecture_id"];
+            NSString *lecture_title=[s stringForColumn:@"lecture_title"];
+            int lecture_lang=[s intForColumn:@"lecture_lang"];
+            int lecture_type=[s intForColumn:@"lecture_type"];
+            int lecture_level=[s intForColumn:@"lecture_level"];
+            int lecture_exam=[s intForColumn:@"lecture_exam"];
+            int lecture_status=[s intForColumn:@"lecture_status"];
+            NSString *lecture_created=[s stringForColumn:@"lecture_created"];
+            NSString *lecture_updated=[s stringForColumn:@"lecture_updated"];
+            LectureBasic *basic=[[LectureBasic alloc] initWithId:lecture_id title:lecture_title lang:lecture_lang type:lecture_type level:lecture_level exam:lecture_exam status:lecture_status created:lecture_created updated:lecture_updated];
+            LectureSample *sample=[RemoteData getLectureSampleFromDbByLectureId:lecture_id];
+            NSMutableArray *videos=[RemoteData getLectureVideosFromDbByLectureId:lecture_id];
+            featuredLecture=[[FeaturedLecture alloc] initWithBasic:basic sample:sample videos:videos];
+            break;
+        }
+        
+    }
+    [db close];
+    return featuredLecture;
+}
++(NSMutableArray*)loadFeaturedLecturesToArrayByLang:(NSInteger)lang_id{
+    NSMutableArray *featuredLectures=[[NSMutableArray alloc] init];
+    NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsPath = [paths objectAtIndex:0];
+    NSString *dbPath = [docsPath stringByAppendingPathComponent:@"LectureDB.sqlite"];
+    NSLog(@"dbPath:%@",dbPath);
+    FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
+    if (![db open]) {
+        NSLog(@"Could not open db. when loadFeaturedLecturesToArray");
+    }
+    else
+    {
+        NSString *query=@"SELECT * FROM topik_lecture_basic ORDER BY lecture_exam DESC";
+        if(lang_id>0)
+        {
+            query=[NSString stringWithFormat:@"SELECT * FROM topik_lecture_basic WHERE lecture_lang=%ld ORDER BY lecture_exam DESC",(long)lang_id];
+        }
+        FMResultSet *s = [db executeQuery:query];
+        while ([s next]) {
+            int lecture_id=[s intForColumn:@"lecture_id"];
+            NSString *lecture_title=[s stringForColumn:@"lecture_title"];
+            int lecture_lang=[s intForColumn:@"lecture_lang"];
+            int lecture_type=[s intForColumn:@"lecture_type"];
+            int lecture_level=[s intForColumn:@"lecture_level"];
+            int lecture_exam=[s intForColumn:@"lecture_exam"];
+            int lecture_status=[s intForColumn:@"lecture_status"];
+            NSString *lecture_created=[s stringForColumn:@"lecture_created"];
+            NSString *lecture_updated=[s stringForColumn:@"lecture_updated"];
+            LectureBasic *basic=[[LectureBasic alloc] initWithId:lecture_id title:lecture_title lang:lecture_lang type:lecture_type level:lecture_level exam:lecture_exam status:lecture_status created:lecture_created updated:lecture_updated];
+            //NSLog(@"loadFeaturedLecturesToArray-topik_lecture_basic: lecture_id=%d, lecture_title=%@, lecture_lang=%d,  lecture_type=%d, lecture_level=%d, lecture_exam=%d, lecture_status=%d,lecture_created=%@, lecture_updated=%@,",lecture_id,lecture_title,lecture_lang,lecture_type,lecture_level,lecture_exam,lecture_status,lecture_created,lecture_updated);
+            LectureSample *sample=[RemoteData getLectureSampleFromDbByLectureId:lecture_id];
+            NSMutableArray *videos=[RemoteData getLectureVideosFromDbByLectureId:lecture_id];
+            FeaturedLecture *featuredLecture=[[FeaturedLecture alloc] initWithBasic:basic sample:sample videos:videos];
+            [featuredLectures addObject:featuredLecture];
+        }
+        
+    }
+    [db close];
+    return featuredLectures;
+
 }
 +(NSMutableArray*)loadFeaturedLecturesToArray{
     NSMutableArray *featuredLectures=[[NSMutableArray alloc] init];
@@ -395,7 +583,7 @@
     }
     else
     {
-        FMResultSet *s = [db executeQuery:@"SELECT * FROM topik_lecture_basic"];
+        FMResultSet *s = [db executeQuery:@"SELECT * FROM topik_lecture_basic ORDER BY lecture_exam DESC"];
         while ([s next]) {
             int lecture_id=[s intForColumn:@"lecture_id"];
             NSString *lecture_title=[s stringForColumn:@"lecture_title"];
@@ -407,7 +595,7 @@
             NSString *lecture_created=[s stringForColumn:@"lecture_created"];
             NSString *lecture_updated=[s stringForColumn:@"lecture_updated"];
             LectureBasic *basic=[[LectureBasic alloc] initWithId:lecture_id title:lecture_title lang:lecture_lang type:lecture_type level:lecture_level exam:lecture_exam status:lecture_status created:lecture_created updated:lecture_updated];
-            NSLog(@"loadFeaturedLecturesToArray-topik_lecture_basic: lecture_id=%d, lecture_title=%@, lecture_lang=%d,  lecture_type=%d, lecture_level=%d, lecture_exam=%d, lecture_status=%d,lecture_created=%@, lecture_updated=%@,",lecture_id,lecture_title,lecture_lang,lecture_type,lecture_level,lecture_exam,lecture_status,lecture_created,lecture_updated);
+            //NSLog(@"loadFeaturedLecturesToArray-topik_lecture_basic: lecture_id=%d, lecture_title=%@, lecture_lang=%d,  lecture_type=%d, lecture_level=%d, lecture_exam=%d, lecture_status=%d,lecture_created=%@, lecture_updated=%@,",lecture_id,lecture_title,lecture_lang,lecture_type,lecture_level,lecture_exam,lecture_status,lecture_created,lecture_updated);
             LectureSample *sample=[RemoteData getLectureSampleFromDbByLectureId:lecture_id];
             NSMutableArray *videos=[RemoteData getLectureVideosFromDbByLectureId:lecture_id];
             FeaturedLecture *featuredLecture=[[FeaturedLecture alloc] initWithBasic:basic sample:sample videos:videos];
@@ -417,6 +605,163 @@
     }
     [db close];
     return featuredLectures;
+}
++(NSMutableArray*)loadFreeLecturesToArrayByLang:(NSInteger)lang_id
+{
+    NSMutableArray *freeLectures=[[NSMutableArray alloc] init];
+    NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsPath = [paths objectAtIndex:0];
+    NSString *dbPath = [docsPath stringByAppendingPathComponent:@"LectureDB.sqlite"];
+    NSLog(@"dbPath:%@",dbPath);
+    FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
+    if (![db open]) {
+        NSLog(@"Could not open db. when loadFeaturedLecturesToArray");
+    }
+    else
+    {
+        NSString *query=@"SELECT * FROM topik_free_lecture ORDER BY free_created DESC";
+        if(lang_id>0)
+        {
+            query=[NSString stringWithFormat:@"SELECT * FROM topik_free_lecture WHERE lecture_lang=%ld ORDER BY free_created DESC",(long)lang_id];
+        }
+        FMResultSet *s = [db executeQuery:query];
+        while ([s next]) {
+            NSInteger  free_id=[s intForColumn:@"free_id"];
+            NSInteger lecture_lang=[s intForColumn:@"lecture_lang"];
+            NSInteger lecture_type=[s intForColumn:@"lecture_type"];
+            NSString *free_title=[s stringForColumn:@"free_title"];
+            NSString *free_link=[s stringForColumn:@"free_link"];
+            NSString *free_host=[s stringForColumn:@"free_host"];
+            NSString *free_vid=[s stringForColumn:@"free_vid"];
+            NSString *free_img=[s stringForColumn:@"free_img"];
+            NSInteger free_status=[s intForColumn:@"free_status"];
+            NSString *free_created=[s stringForColumn:@"free_created"];
+            NSString *free_updated=[s stringForColumn:@"free_updated"];
+            FreeLecture *free=[[FreeLecture alloc]initWithFreeID:free_id title:free_title lang:lecture_lang type:lecture_type link:free_link host:free_host vid:free_vid img:free_img status:free_status created:free_created updated:free_updated];
+            [freeLectures addObject:free];
+        }
+        
+        
+        
+    }
+    [db close];
+    return freeLectures;
+}
++(NSMutableArray *)loadFreeLecturesToArray{
+    NSMutableArray *freeLectures=[[NSMutableArray alloc] init];
+    NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsPath = [paths objectAtIndex:0];
+    NSString *dbPath = [docsPath stringByAppendingPathComponent:@"LectureDB.sqlite"];
+    NSLog(@"dbPath:%@",dbPath);
+    FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
+    if (![db open]) {
+        NSLog(@"Could not open db. when loadFeaturedLecturesToArray");
+    }
+    else
+    {
+        FMResultSet *s = [db executeQuery:@"SELECT * FROM topik_free_lecture"];
+        while ([s next]) {
+            NSInteger  free_id=[s intForColumn:@"free_id"];
+            NSInteger lecture_lang=[s intForColumn:@"lecture_lang"];
+            NSInteger lecture_type=[s intForColumn:@"lecture_type"];
+            NSString *free_title=[s stringForColumn:@"free_title"];
+            NSString *free_link=[s stringForColumn:@"free_link"];
+            NSString *free_host=[s stringForColumn:@"free_host"];
+            NSString *free_vid=[s stringForColumn:@"free_vid"];
+            NSString *free_img=[s stringForColumn:@"free_img"];
+            NSInteger free_status=[s intForColumn:@"free_status"];
+            NSString *free_created=[s stringForColumn:@"free_created"];
+            NSString *free_updated=[s stringForColumn:@"free_updated"];
+             FreeLecture *free=[[FreeLecture alloc]initWithFreeID:free_id title:free_title lang:lecture_lang type:lecture_type link:free_link host:free_host vid:free_vid img:free_img status:free_status created:free_created updated:free_updated];
+            [freeLectures addObject:free];
+        }
+
+      
+        
+    }
+    [db close];
+    return freeLectures;
+}
++(NSMutableArray*)loadLanguagesToArray{
+    NSMutableArray *languages=[[NSMutableArray alloc] init];
+    NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsPath = [paths objectAtIndex:0];
+    NSString *dbPath = [docsPath stringByAppendingPathComponent:@"LectureDB.sqlite"];
+    NSLog(@"dbPath:%@",dbPath);
+    FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
+    if (![db open]) {
+        NSLog(@"Could not open db. when loadFeaturedLecturesToArray");
+    }
+    else
+    {
+
+        FMResultSet *s = [db executeQuery:@"SELECT * FROM topik_lang"];
+        while ([s next]) {
+            int lang_id=[s intForColumn:@"lang_id"];
+            NSString *lang_name=[s stringForColumn:@"lang_name"];
+            NSString *lang_description=[s stringForColumn:@"lang_description"];
+            LectureLanguage *language=[[LectureLanguage alloc] initWithId:lang_id name:lang_name description:lang_description];
+            NSString *query=[NSString stringWithFormat:@"SELECT lecture_id FROM topik_lecture_basic where lecture_lang=%d",lang_id];
+            FMResultSet *sFeatured = [db executeQuery:query];
+            NSInteger featuredCount=0;
+            while ([sFeatured next])
+            {
+                featuredCount++;
+            }
+            language.featuredCount=featuredCount;
+            query=[NSString stringWithFormat:@"SELECT free_id FROM topik_free_lecture where lecture_lang=%d",lang_id];
+            FMResultSet *sFree = [db executeQuery:query];
+            NSInteger freeCount=0;
+            while ([sFree next])
+            {
+                freeCount++;
+            }
+            language.freeCount=freeCount;
+            [languages addObject:language];
+     }
+    }
+    [db close];
+    
+    return languages;
+}
++(NSMutableArray *)loadBookmarkLecturesToArray{
+    NSMutableArray *bookmarks=[[NSMutableArray alloc] init];
+    NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsPath = [paths objectAtIndex:0];
+    NSString *dbPath = [docsPath stringByAppendingPathComponent:@"LectureDB.sqlite"];
+    NSLog(@"dbPath:%@",dbPath);
+    FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
+    if (![db open]) {
+        NSLog(@"Could not open db. when loadFeaturedLecturesToArray");
+    }
+    else
+    {
+        NSString *query=@"SELECT * FROM topik_bookmark ORDER BY bm_created DESC";
+        FMResultSet *s = [db executeQuery:query];
+        while ([s next]) {
+            NSInteger bookmark_id=[s intForColumn:@"bm_id"];
+            NSInteger lecture_id=[s intForColumn:@"lecture_id"];
+            NSInteger is_paid_int=[s intForColumn:@"is_paid"];
+            BOOL is_paid=FALSE;
+            if(is_paid_int==1)
+            {
+                is_paid=TRUE;
+            }
+            NSString *lecture_title=[s stringForColumn:@"lecture_title"];
+            NSString *lecture_img=[s stringForColumn:@"lecture_img"];
+            NSInteger video_count=[s intForColumn:@"video_count"];
+            NSString *bm_created=[s stringForColumn:@"bm_created"];
+            
+            NSLog(@"EXIST: topik_bookmark: bookmark_id=%ld, lecture_id=%ld,is_paid_int=%ld, lecture_title=%@,  lecture_img=%@, video_count=%ld, bm_created=%@",(long)bookmark_id,(long)lecture_id,(long)is_paid_int,lecture_title,lecture_img,(long)video_count,bm_created);
+            BookmarkLecture *lecture=[[BookmarkLecture alloc] initWithLectureId:lecture_id isPaid:is_paid title:lecture_title img:lecture_img videoCount:video_count created:bm_created];
+            [bookmarks addObject:lecture];
+        
+        }
+        
+    }
+    [db close];
+    return bookmarks;
+
 }
 +(LectureSample *)getLectureSampleFromDbByLectureId:(NSInteger)lecture_id
 {
@@ -595,6 +940,83 @@
 
     return isExist;
 }
++(BOOL)FreeLectureExistsInBookmark:(FreeLecture*)freeLecture{
+    BOOL isExist=FALSE;
+    NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsPath = [paths objectAtIndex:0];
+    NSString *dbPath = [docsPath stringByAppendingPathComponent:@"LectureDB.sqlite"];
+    NSLog(@"dbPath:%@",dbPath);
+    FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
+    if (![db open]) {
+        NSLog(@"Could not open db.");
+    }
+    else
+    {
+        
+        NSString *query=[NSString stringWithFormat:@"SELECT * FROM topik_bookmark WHERE lecture_id=%ld AND is_paid=0",(long)freeLecture.free_id];
+        FMResultSet *s = [db executeQuery:query];
+        while ([s next]) {
+            isExist=TRUE;
+        }
+        
+    }
+    [db close];
+    
+    return isExist;
+}
++(void)InsertFreeLectureBookmark:(FreeLecture*)freeLecture{
+    /**
+     CREATE TABLE topik_free_lecture(fl_id INTEGER PRIMARY KEY AUTOINCREMENT,free_id integer,free_title text,lecture_lang INTEGER,lecture_type INTEGER,free_link text,free_host text,free_vid text,free_img text,free_status integer,free_created text, free_updated text);
+     **/
+    BookmarkLecture *bookmark=[[BookmarkLecture alloc] initWithFreeLecture:freeLecture];
+    NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsPath = [paths objectAtIndex:0];
+    NSString *dbPath = [docsPath stringByAppendingPathComponent:@"LectureDB.sqlite"];
+    NSLog(@"dbPath:%@",dbPath);
+    FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
+    if (![db open]) {
+        NSLog(@"Could not open db.");
+    }
+    else
+    {
+        NSString *query=[NSString stringWithFormat:@"SELECT * FROM topik_bookmark WHERE lecture_id=%ld AND is_paid=0",(long)freeLecture.free_id];
+        FMResultSet *s = [db executeQuery:query];
+        BOOL isExist=FALSE;
+        while ([s next]) {
+            NSInteger bookmark_id=[s intForColumn:@"bm_id"];
+            NSInteger lecture_id=[s intForColumn:@"lecture_id"];
+            NSInteger is_paid_int=[s intForColumn:@"is_paid"];
+            BOOL is_paid=FALSE;
+            if(is_paid_int==1)
+            {
+                is_paid=TRUE;
+            }
+            NSString *lecture_title=[s stringForColumn:@"lecture_title"];
+            NSString *lecture_img=[s stringForColumn:@"lecture_img"];
+            NSInteger video_count=[s intForColumn:@"video_count"];
+            NSString *bm_created=[s stringForColumn:@"bm_created"];
+            
+            NSLog(@"EXIST: topik_bookmark: bookmark_id=%ld, lecture_id=%ld,is_paid_int=%ld, lecture_title=%@,  lecture_img=%@, video_count=%ld, bm_created=%@",(long)bookmark_id,(long)lecture_id,(long)is_paid_int,lecture_title,lecture_img,(long)video_count,bm_created);
+            isExist=TRUE;
+        }
+        if(isExist)
+            return;
+        
+        [db executeUpdate:@"INSERT INTO topik_bookmark(lecture_id,is_paid,lecture_title,lecture_img,video_count,bm_created) VALUES (?,?,?,?,?,?)",
+         [NSNumber numberWithInteger:bookmark.lecture_id],
+         [NSNumber numberWithInteger:0],
+         bookmark.lecture_title,
+         bookmark.lecture_img,
+         [NSNumber numberWithInteger:bookmark.video_count],
+         bookmark.bm_created
+         ];
+        if ([db hadError]) {
+            NSLog(@"INSERT INTO Table:%@ Err %d: %@", @"topik_bookmark",[db lastErrorCode], [db lastErrorMessage]);
+        }
+        
+    }
+    [db close];
+}
 +(void)RemoveFeaturedLectureFromBookmark:(FeaturedLecture*)featuredLecture{
     
     NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -612,6 +1034,27 @@
         [db executeUpdate:deleteQuery];
         if ([db hadError]) {
             NSLog(@"Clear Table:%@ Err %d: %@", @"topik_bookmark",[db lastErrorCode], [db lastErrorMessage]);
+        }
+    }
+    [db close];
+}
++(void)RemoveFreeLectureFromBookmark:(FreeLecture*)freeLecture{
+    
+    NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsPath = [paths objectAtIndex:0];
+    NSString *dbPath = [docsPath stringByAppendingPathComponent:@"LectureDB.sqlite"];
+    NSLog(@"dbPath:%@",dbPath);
+    FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
+    if (![db open]) {
+        NSLog(@"Could not open db.");
+    }
+    else
+    {
+        NSString *deleteQuery =@"";//@"DELETE FROM user WHERE age = 25";
+        deleteQuery=[NSString stringWithFormat:@"DELETE FROM topik_bookmark WHERE lecture_id=%ld AND is_paid=0",(long)freeLecture.free_id];
+        [db executeUpdate:deleteQuery];
+        if ([db hadError]) {
+            NSLog(@"RemoveFreeLectureFromBookmark Table:%@ Err %d: %@", @"topik_bookmark",[db lastErrorCode], [db lastErrorMessage]);
         }
     }
     [db close];
@@ -876,6 +1319,34 @@
     }
     [db close];
 }
++(void)RemoveBookmarkByLectureId:(NSInteger)lecture_id isPaid:(BOOL)is_paid{
+    NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsPath = [paths objectAtIndex:0];
+    NSString *dbPath = [docsPath stringByAppendingPathComponent:@"LectureDB.sqlite"];
+    NSLog(@"dbPath:%@",dbPath);
+    FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
+    if (![db open]) {
+        NSLog(@"Could not open db.");
+    }
+    else
+    {
+       
+        
+        NSString *deleteQuery =@"";//@"DELETE FROM user WHERE age = 25";
+        NSInteger int_is_paid=0;
+        if(is_paid)
+        {
+            int_is_paid=1;
+        }
+        deleteQuery=[NSString stringWithFormat:@"DELETE FROM topik_bookmark WHERE lecture_id=%ld AND is_paid=%ld",(long)lecture_id,(long)int_is_paid];
+        [db executeUpdate:deleteQuery];
+        if ([db hadError]) {
+            NSLog(@"RemoveBookmarkByLectureId:%@ Err %d: %@", @"topik_download",[db lastErrorCode], [db lastErrorMessage]);
+        }
+    }
+    [db close];
+}
+
 +(void)RemoveFeaturedLectureFromDownload:(FeaturedLecture*)featuredLecture{
     NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *docsPath = [paths objectAtIndex:0];

@@ -13,6 +13,8 @@
 @property(nonatomic,assign)NSInteger lang_id;
 @property(nonatomic,copy)NSString *lang_name;
 @property(nonatomic,copy)NSString *lang_description;
+@property(nonatomic,assign)NSInteger featuredCount;
+@property(nonatomic,assign)NSInteger freeCount;
 -(id)initWithId:(NSInteger)lang_id name:(NSString *)lang_name description:(NSString *)lang_description;
 -(void)print;
 @end

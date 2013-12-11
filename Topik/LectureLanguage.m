@@ -14,9 +14,12 @@
     {
         if(lang_id>0)
         {
-            self.lang_id=lang_id;
-            self.lang_name=lang_name;
-            self.lang_description=lang_description;
+            _lang_id=lang_id;
+            _lang_name=lang_name;
+            _lang_description=lang_description;
+            _featuredCount=0;
+            _freeCount=0;
+            
         }
     }
     return self;
@@ -24,4 +27,5 @@
 -(void)print{
     //NSLog(@"Language id:%d name:%@ description:%@",self.lang_id,self.lang_name,self.lang_description);
 }
+
 @end

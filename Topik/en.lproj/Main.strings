@@ -2,9 +2,9 @@
 /* Class = "IBUITabBarItem"; title = "Featured"; ObjectID = "cff-bm-qcM"; */
 "cff-bm-qcM.title" = "Featured";
 /* Class = "IBUITabBarItem"; title = "Free"; ObjectID = "zVi-cL-wG4"; */
-"zVi-cL-wG4.title" = "Free";
+"8pR-Pa-NOF.title" = "Free";
 /* Class = "IBUITabBarItem"; title = "All"; ObjectID = "vRV-1J-NaQ"; */
-"vRV-1J-NaQ.title" = "All";
+"1nP-8u-zbN.title" = "All";
 /* Class = "IBUITabBarItem"; title = "My"; ObjectID = "2Xb-1a-JzK"; */
 "2Xb-1a-JzK.title" = "My";
 /* Class = "IBUITabBarItem"; title = "Setting"; ObjectID = "JTr-u6-LyU"; */
@@ -19,7 +19,7 @@
 
 
 /* Class = "IBUINavigationItem"; title = "Root View Controller"; ObjectID = "fkr-qs-xgR"; */
-"fkr-qs-xgR.title" = "Root View Controller";
+"fkr-qs-xgR.title" = "Free Lectures";
 /* Class = "IBUINavigationItem"; title = "Title"; ObjectID = "xTX-7H-r33"; */
 "xTX-7H-r33.title" = "Title";
 

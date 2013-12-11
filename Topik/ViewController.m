@@ -25,7 +25,7 @@
     //[self.indicator startAnimating];
     if(isiPhone5)
     {
-        UIColor *background = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"Default-568.png"]];
+        UIColor *background = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"Default-568h.png"]];
         self.view.backgroundColor = background;
     }
     else
@@ -39,6 +39,11 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self loadDataFromServer];
 }
 #pragma mark- Button Action
 -(IBAction)loadData:(id)sender{
@@ -78,6 +83,7 @@
     //to hide networkActivityIndicator:
     //[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     //[self performSegueWithIdentifier:@"showApp" sender:self];
+    [self loadMainApp];
 }
 
 - (void)requestFailed:(ASIHTTPRequest *)request
@@ -87,6 +93,11 @@
     [self.indicator stopAnimating];
     //to hide networkActivityIndicator:
     //[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    [self loadMainApp];
+}
+
+-(void)loadMainApp{
+    [self performSegueWithIdentifier:@"showApp" sender:self];
 }
 #pragma mark- parse Json data
 - (void)parseData:(NSData *)responseData {

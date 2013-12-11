@@ -1,9 +1,9 @@
 /* Class = "IBUITabBarItem"; title = "Featured"; ObjectID = "cff-bm-qcM"; */
 "cff-bm-qcM.title" = "真题特讲";
 /* Class = "IBUITabBarItem"; title = "Free"; ObjectID = "zVi-cL-wG4"; */
-"zVi-cL-wG4.title" = "免费";
+"8pR-Pa-NOF.title" = "免费";
 /* Class = "IBUITabBarItem"; title = "All"; ObjectID = "vRV-1J-NaQ"; */
-"vRV-1J-NaQ.title" = "全部";
+"1nP-8u-zbN.title" = "全部";
 /* Class = "IBUITabBarItem"; title = "My"; ObjectID = "2Xb-1a-JzK"; */
 "2Xb-1a-JzK.title" = "我的讲座";
 /* Class = "IBUITabBarItem"; title = "Setting"; ObjectID = "JTr-u6-LyU"; */
@@ -15,8 +15,9 @@
 "RZS-JE-0zA.normalTitle" = "Load From Server";
 
 /* Class = "IBUINavigationItem"; title = "Root View Controller"; ObjectID = "fkr-qs-xgR"; */
-"fkr-qs-xgR.title" = "Root View Controller";
+"fkr-qs-xgR.title" = "免费讲座";
 /* Class = "IBUINavigationItem"; title = "Title"; ObjectID = "xTX-7H-r33"; */
 "xTX-7H-r33.title" = "Title";
+
 
 

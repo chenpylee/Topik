@@ -1186,6 +1186,7 @@
 		C6A68B8B1840747C007A3B63 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer: SAEHYOUNG OH (443LXXJ882)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/leehaining/iOS/work/Topik,
@@ -1202,6 +1203,7 @@
 		C6A68B8C1840747C007A3B63 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Distribution: KOREA TOPIK EDUCATION CENTER Co., Ltd. (8QSWJME3AY)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/leehaining/iOS/work/Topik,

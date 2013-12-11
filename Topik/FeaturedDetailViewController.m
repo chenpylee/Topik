@@ -78,6 +78,9 @@
     //register DownloadProgressNotification
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setProgress:) name:kDownloadProgressNotification object:nil];
     
+
+
+    
 }
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];

@@ -20,6 +20,7 @@
 #import "DownloadLecture.h"
 #import "FeaturedPlaylistCell.h"
 #import "DownloadProgress.h"
+#import "UIImageView+WebCache.h"
 @interface FeaturedDetailViewController ()
 {
     MPMoviePlayerViewController *player;
@@ -28,6 +29,8 @@
     __weak IBOutlet UILabel *playlistLabel;
     __weak IBOutlet UITableView *playlistTableView;
     NSMutableArray *videosFromDB;
+    
+    Reachability *internetReach;
 }
 @property (weak, nonatomic) IBOutlet UIView *videoSuper;
 @property (nonatomic,assign) NSInteger selectedVideoIndex;
@@ -63,27 +66,121 @@
 	// Do any additional setup after loading the view.
     [self updateBookmarkButton];
     [self updateDownloadButton];
+    
+}
+-(void) setupVideoPlay{
+    self.placeHolderLv1=[UIImage imageNamed:@"topik_placeholder_1.png"];
+    self.placeHolderLv2=[UIImage imageNamed:@"topik_placeholder_2.png"];
+    self.placeHolderLv3=[UIImage imageNamed:@"topik_placeholder_3.png"];
+    self.placeHolderLv4=[UIImage imageNamed:@"topik_placeholder_4.png"];
+    UIImage *placeholder=nil;
+    switch (self.lecture.level_id) {
+        case 1:
+            placeholder=self.placeHolderLv1;
+            break;
+        case 2:
+            placeholder=self.placeHolderLv2;
+            break;
+        case 3:
+            placeholder=self.placeHolderLv3;
+            break;
+        case 4:
+            placeholder=self.placeHolderLv4;
+            break;
+        default:
+            placeholder=self.placeHolderLv4;
+            break;
+    }
+    if(![self.lecture.lecture_img_url isEqualToString:@""])
+    {
+        [self.videoImageView setImageWithURL:[NSURL URLWithString:self.lecture.lecture_img_url]
+                            placeholderImage:placeholder];
+    }
+    else
+    {
+        self.videoImageView.image=placeholder;
+    }
+
+}
+- (IBAction)checkAndPlay:(id)sender{
+    
+    internetReach=[Reachability reachabilityForInternetConnection];
+    [internetReach startNotifier];
+    NetworkStatus netStatus=[internetReach currentReachabilityStatus];
+    switch(netStatus)
+    {
+        case ReachableViaWiFi:
+        {
+            NSLog(@"Current NetStatus:%@",@"Wifi connected");
+            [self playVideo];
+            break;
+        }
+        case ReachableViaWWAN:
+        {
+            NSLog(@"Current NetStatus:%@",@"WWAN connected");
+            if([AppConfig isInDebugMode])//for review, 3G/GPRS is not allowed
+            {
+                [self showForbiddenMsg];
+            }
+            else
+            {
+                [self showOptionMsg];
+            }
+            break;
+        }
+        case NotReachable:
+        {
+            NSLog(@"Current NetStatus:%@",@"Not connected");
+            [self showForbiddenMsg];
+            break;
+        }
+        default:
+            break;
+    }
+   
+}
+-(void)showForbiddenMsg{
+    UIAlertView *message = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Check Network", nil)
+                                                      message:NSLocalizedString(@"Wifi Only", nil)
+                                                     delegate:nil
+                                            cancelButtonTitle:@"OK"
+                                            otherButtonTitles:nil];
+    [message show];
+}
+-(void)showOptionMsg{
+    UIAlertView *message = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Check Network", nil)
+                                                      message:NSLocalizedString(@"3G and continue", nil)
+                                                     delegate:self
+                                            cancelButtonTitle:NSLocalizedString(@"Abort", nil)
+                                            otherButtonTitles:NSLocalizedString(@"Continue Playing", nil),nil];
+    message.tag=20;
+    [message show];
 }
 
+-(void)playVideo{
+    NSString *sampleUrlString=[NSString stringWithFormat:@"http://v.youku.com/player/getRealM3U8/vid/%@/type/video.m3u8",self.lecture.sample.sv_vid];
+    NSLog(@"FeaturedDetail:vid:%@",self.lecture.sample.sv_vid);
+    [self parepareVideo:sampleUrlString];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setProgress:) name:kDownloadProgressNotification object:nil];
+}
 -(void)viewWillAppear:(BOOL)animated{
     [self updateDownloadButton];
     [self updateBookmarkButton];
-    NSString *sampleUrlString=[NSString stringWithFormat:@"http://v.youku.com/player/getRealM3U8/vid/%@/type/video.m3u8",self.lecture.sample.sv_vid];
-    NSLog(@"FeaturedDetail:vid:%@",self.lecture.sample.sv_vid);
-   [self parepareVideo:sampleUrlString];
     
+    [self setupVideoPlay];
     [RemoteData updateDownloadProgressFromDisk];
     [self updateProgressDataFromDB];
     [playlistTableView reloadData];
     //register DownloadProgressNotification
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setProgress:) name:kDownloadProgressNotification object:nil];
-    
-
-
     
 }
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
+    if(player)
+    {
+        [player.moviePlayer stop];
+        [player.moviePlayer.view removeFromSuperview];
+    }
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 - (void)didReceiveMemoryWaning
@@ -207,7 +304,7 @@
     player.moviePlayer.controlStyle =MPMovieControlStyleEmbedded;
     [player.moviePlayer.view setFrame:self.videoSuper.bounds];
     [player.moviePlayer setScalingMode:MPMovieScalingModeAspectFit];
-    [player.moviePlayer setShouldAutoplay:FALSE];
+    [player.moviePlayer setShouldAutoplay:TRUE];
     [player.moviePlayer prepareToPlay];
     
     [self.videoSuper addSubview:player.moviePlayer.view];
@@ -327,6 +424,7 @@
     self.selectedVideoIndex=indexPath.row;
     [self performSegueWithIdentifier:@"FeaturedVideoDetailSegue" sender:self];
 }
+
 - (IBAction)updateBookmark:(id)sender {
     [self insertBookMark:self.lecture];
 }
@@ -366,6 +464,11 @@
 }
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    if(alertView.tag==20)
+    {
+        [self playVideo];
+        return;
+    }
     
     if(alertView.tag==10)
     {
@@ -397,6 +500,7 @@
                 break;
         }
     }
+    
     [self updateDownloadButton];
 }
 -(void)updateBookmarkButton{

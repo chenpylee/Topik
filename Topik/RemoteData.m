@@ -39,6 +39,10 @@
     else
     {
         //Languages
+        NSInteger isDebugMode=[[json objectForKey:@"debug"] intValue];
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setBool:(isDebugMode==1) forKey:kAppIsInDebugMode];
+        [defaults synchronize];
         
         NSArray* jsonLanguages = [json objectForKey:@"languages"]; //languages setting
         NSArray* jsonCategories = [json objectForKey:@"categories"]; //lecture categories setting
@@ -1364,8 +1368,11 @@
         while ([s next]) {
             NSInteger video_id=[s intForColumn:@"video_id"];
             NSString *video_url=[s stringForColumn:@"video_url"];
-            NSString *downloadPath=[docsPath stringByAppendingFormat:@"/Lectures/%ld.mp4",(long)video_id];
-            NSString *tempPath=[docsPath stringByAppendingFormat:@"/LectureTmp/%ld.download",(long)video_id];
+            NSString *directoryPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Caches"];
+            //_downloadDirectory=[directoryPath stringByAppendingString:@"/Lectures"];
+            //_downloadTempDirectory=[directoryPath stringByAppendingString:@"/LectureTmp"];
+            NSString *downloadPath=[directoryPath stringByAppendingFormat:@"/Lectures/%ld.mp4",(long)video_id];
+            NSString *tempPath=[directoryPath stringByAppendingFormat:@"/LectureTmp/%ld.download",(long)video_id];
             if([[NSFileManager defaultManager] fileExistsAtPath:downloadPath])
             {
                 [[NSFileManager defaultManager] removeItemAtPath:downloadPath error:Nil];
@@ -1655,8 +1662,11 @@
 +(void)updateDownloadProgressFromDisk{
     NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *docsPath = [paths objectAtIndex:0];
-    NSString *downloadPath = [docsPath stringByAppendingPathComponent:@"Lectures"];
-    NSString *tmpPath = [docsPath stringByAppendingPathComponent:@"LectureTmp"];
+    //NSString *downloadPath = [docsPath stringByAppendingPathComponent:@"Lectures"];
+    //NSString *tmpPath = [docsPath stringByAppendingPathComponent:@"LectureTmp"];
+    NSString *directoryPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Caches"];
+    NSString *downloadPath=[directoryPath stringByAppendingString:@"/Lectures"];
+    NSString *tmpPath = [directoryPath stringByAppendingString:@"/LectureTmp"];
     NSString *dbPath = [docsPath stringByAppendingPathComponent:@"LectureDB.sqlite"];
     FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
     NSString *updateStatusQuery=@"";

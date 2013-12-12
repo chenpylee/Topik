@@ -11,11 +11,13 @@
 #import "AppDelegate.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import "RemoteData.h"
+#import "UIImageView+WebCache.h"
 @interface FreeLectureDetailViewController ()
 {
     MPMoviePlayerViewController *player;
     __weak IBOutlet UILabel *previewLabel;
     __weak IBOutlet UILabel *titleLabel;
+    Reachability *internetReach;
 }
 @property (weak, nonatomic) IBOutlet UIView *videoSuper;
 @end
@@ -52,12 +54,115 @@
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self updateBookmarkButton];
-    NSString *sampleUrlString=[NSString stringWithFormat:@"http://v.youku.com/player/getRealM3U8/vid/%@/type/video.m3u8",self.lecture.free_vid];
-    [self parepareVideo:sampleUrlString];
+    [self setupVideoPlay];
+    
 }
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
+    if(player)
+    {
+        [player.moviePlayer stop];
+        [player.moviePlayer.view removeFromSuperview];
+    }
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+
+-(void) setupVideoPlay{
+    self.placeHolderVG=[UIImage imageNamed:@"placeholder_6.png"];
+    self.placeHolderW=[UIImage imageNamed:@"placeholder_8.png"];
+    self.placeHolderL=[UIImage imageNamed:@"placeholder_9.png"];
+    self.placeHolderR=[UIImage imageNamed:@"placeholder_10.png"];
+    self.placeHolderO=[UIImage imageNamed:@"placeholder_11.png"];
+    UIImage *placeholder=nil;
+    switch (self.lecture.lecture_type) {
+        case 6:
+            placeholder=self.placeHolderVG;
+            break;
+        case 8:
+            placeholder=self.placeHolderW;
+            break;
+        case 9:
+            placeholder=self.placeHolderL;
+            break;
+        case 10:
+            placeholder=self.placeHolderR;
+            break;
+        case 11:
+            placeholder=self.placeHolderO;
+            break;
+        default:
+            placeholder=self.placeHolderO;
+            break;
+    }
+    if(![self.lecture.free_img isEqualToString:@""])
+    {
+        [self.videoImageView setImageWithURL:[NSURL URLWithString:self.lecture.free_img]
+                            placeholderImage:placeholder];
+    }
+    else
+    {
+        self.videoImageView.image=placeholder;
+    }
+    
+}
+- (IBAction)checkAndPlay:(id)sender{
+    
+    internetReach=[Reachability reachabilityForInternetConnection];
+    [internetReach startNotifier];
+    NetworkStatus netStatus=[internetReach currentReachabilityStatus];
+    switch(netStatus)
+    {
+        case ReachableViaWiFi:
+        {
+            NSLog(@"Current NetStatus:%@",@"Wifi connected");
+            [self playVideo];
+            break;
+        }
+        case ReachableViaWWAN:
+        {
+            NSLog(@"Current NetStatus:%@",@"WWAN connected");
+            if([AppConfig isInDebugMode])//for review, 3G/GPRS is not allowed
+            {
+                [self showForbiddenMsg];
+            }
+            else
+            {
+                [self showOptionMsg];
+            }
+            break;
+        }
+        case NotReachable:
+        {
+            NSLog(@"Current NetStatus:%@",@"Not connected");
+            [self showForbiddenMsg];
+            break;
+        }
+        default:
+            break;
+    }
+    
+}
+-(void)showForbiddenMsg{
+    UIAlertView *message = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Check Network", nil)
+                                                      message:NSLocalizedString(@"Wifi Only", nil)
+                                                     delegate:nil
+                                            cancelButtonTitle:@"OK"
+                                            otherButtonTitles:nil];
+    [message show];
+}
+-(void)showOptionMsg{
+    UIAlertView *message = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Check Network", nil)
+                                                      message:NSLocalizedString(@"3G and continue", nil)
+                                                     delegate:self
+                                            cancelButtonTitle:NSLocalizedString(@"Abort", nil)
+                                            otherButtonTitles:NSLocalizedString(@"Continue Playing", nil),nil];
+    message.tag=20;
+    [message show];
+}
+-(void)playVideo{
+    NSString *sampleUrlString=[NSString stringWithFormat:@"http://v.youku.com/player/getRealM3U8/vid/%@/type/video.m3u8",self.lecture.free_vid];
+    [self parepareVideo:sampleUrlString];
 }
 - (void)didReceiveMemoryWarning
 {
@@ -95,7 +200,7 @@
     player.moviePlayer.controlStyle =MPMovieControlStyleEmbedded;
     [player.moviePlayer.view setFrame:self.videoSuper.bounds];
     [player.moviePlayer setScalingMode:MPMovieScalingModeAspectFit];
-    [player.moviePlayer setShouldAutoplay:FALSE];
+    [player.moviePlayer setShouldAutoplay:TRUE];
     [player.moviePlayer prepareToPlay];
     
     [self.videoSuper addSubview:player.moviePlayer.view];
@@ -130,5 +235,13 @@
 -(void)dealloc{
     NSLog(@"FeaturedDetailViewController dealloc+++++++++++++++++++++");
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(alertView.tag==20)
+    {
+        [self playVideo];
+        return;
+    }
 }
 @end

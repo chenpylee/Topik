@@ -101,4 +101,22 @@
     NSLog(@"newDate: %.0f", [newDate timeIntervalSinceReferenceDate]);
     return [NSString stringWithFormat:@"%@",newDate];
 }
++(BOOL)isInDebugMode{
+    BOOL isDebugMode=false;
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if([defaults objectForKey:kAppIsInDebugMode])
+    {
+        isDebugMode=[defaults boolForKey:kAppIsInDebugMode];
+    }
+    return isDebugMode;
+}
++(BOOL)isBackgroundDownloadOn{
+    BOOL isBackgroundMode=false;
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if([defaults objectForKey:kBackgroundDownloadSetting])
+    {
+        isBackgroundMode=[defaults boolForKey:kBackgroundDownloadSetting];
+    }
+    return isBackgroundMode;
+}
 @end

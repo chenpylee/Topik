@@ -15,6 +15,7 @@
 #import "DownloadListData.h"
 #import "DownloadLecture.h"
 #import "FreeLecture.h"
+#define kAppIsInDebugMode @"IS_DEBUG_MODE"
 @interface RemoteData : NSObject
 +(BOOL)processTotalJsonData:(NSData *)data;
 +(NSMutableArray *)loadFeaturedLecturesToArray;

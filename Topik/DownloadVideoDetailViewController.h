@@ -8,7 +8,18 @@
 
 #import <UIKit/UIKit.h>
 #import "DownloadLecture.h"
-@interface DownloadVideoDetailViewController : UIViewController
+#import "FeaturedLecture.h"
+#import "Reachability.h"
+@interface DownloadVideoDetailViewController : UIViewController<UIAlertViewDelegate>
 @property(nonatomic,strong)DownloadLecture *selectedVideo;
+@property(nonatomic,strong)FeaturedLecture *lecture;
 - (IBAction)updateDownload:(id)sender;
+
+@property(nonatomic,strong)UIImage* placeHolderLv1;
+@property(nonatomic,strong)UIImage* placeHolderLv2;
+@property(nonatomic,strong)UIImage* placeHolderLv3;
+@property(nonatomic,strong)UIImage* placeHolderLv4;
+@property (weak, nonatomic) IBOutlet UIImageView *videoImageView;
+@property (weak, nonatomic) IBOutlet UIButton *videoPlayButton;
+- (IBAction)checkAndPlay:(id)sender;
 @end

@@ -25,6 +25,8 @@
 		C63EFF911858134300BBF463 /* BookmarkCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C63EFF901858134300BBF463 /* BookmarkCell.xib */; };
 		C63EFF9418586FA500BBF463 /* AllLecturesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C63EFF9318586FA500BBF463 /* AllLecturesViewController.m */; };
 		C63EFF9718588EA000BBF463 /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C63EFF9618588EA000BBF463 /* SettingViewController.m */; };
+		C63EFF9A185977A600BBF463 /* play.png in Resources */ = {isa = PBXBuildFile; fileRef = C63EFF98185977A600BBF463 /* play.png */; };
+		C63EFF9B185977A600BBF463 /* play@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C63EFF99185977A600BBF463 /* play@2x.png */; };
 		C6542927185416D900B81E67 /* FreeCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = C6542926185416D900B81E67 /* FreeCellView.m */; };
 		C654292A1854179300B81E67 /* FreeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C65429291854179300B81E67 /* FreeViewController.m */; };
 		C654292D1854253A00B81E67 /* FreeLectureDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C654292C1854253A00B81E67 /* FreeLectureDetailViewController.m */; };
@@ -186,6 +188,8 @@
 		C63EFF9318586FA500BBF463 /* AllLecturesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AllLecturesViewController.m; sourceTree = "<group>"; };
 		C63EFF9518588EA000BBF463 /* SettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingViewController.h; sourceTree = "<group>"; };
 		C63EFF9618588EA000BBF463 /* SettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingViewController.m; sourceTree = "<group>"; };
+		C63EFF98185977A600BBF463 /* play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = play.png; sourceTree = "<group>"; };
+		C63EFF99185977A600BBF463 /* play@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "play@2x.png"; sourceTree = "<group>"; };
 		C6542925185416D900B81E67 /* FreeCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FreeCellView.h; sourceTree = "<group>"; };
 		C6542926185416D900B81E67 /* FreeCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FreeCellView.m; sourceTree = "<group>"; };
 		C65429281854179300B81E67 /* FreeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FreeViewController.h; sourceTree = "<group>"; };
@@ -501,6 +505,8 @@
 		C665681018431F98003BF7AB /* icon */ = {
 			isa = PBXGroup;
 			children = (
+				C63EFF98185977A600BBF463 /* play.png */,
+				C63EFF99185977A600BBF463 /* play@2x.png */,
 				C63EFF84185807F900BBF463 /* placeholder_default.png */,
 				C63EFF85185807F900BBF463 /* placeholder_default@2x.png */,
 				C665686A18441C09003BF7AB /* icon_bookmark_selected.png */,
@@ -843,6 +849,9 @@
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = RotateMediaLabs;
 				TargetAttributes = {
+					C6A68B571840747C007A3B63 = {
+						DevelopmentTeam = 8QSWJME3AY;
+					};
 					C6A68B781840747C007A3B63 = {
 						TestTargetID = C6A68B571840747C007A3B63;
 					};
@@ -893,6 +902,7 @@
 				C6A68B661840747C007A3B63 /* InfoPlist.strings in Resources */,
 				C66567BA1840D254003BF7AB /* splesh_480h.png in Resources */,
 				C63EFF87185807F900BBF463 /* placeholder_default@2x.png in Resources */,
+				C63EFF9A185977A600BBF463 /* play.png in Resources */,
 				C6A68B9F184078D6007A3B63 /* feature.png in Resources */,
 				C66567C81840D86B003BF7AB /* App_ICON120.png in Resources */,
 				C67EAFAD18536F9200F8B1C6 /* placeholder_9.png in Resources */,
@@ -900,6 +910,7 @@
 				C665687318441C09003BF7AB /* icon_bookmark_selected@2x.png in Resources */,
 				C67EAFAE18536F9200F8B1C6 /* placeholder_10@2x.png in Resources */,
 				C67EAFAA18536F9200F8B1C6 /* placeholder_11.png in Resources */,
+				C63EFF9B185977A600BBF463 /* play@2x.png in Resources */,
 				C6A68B6F1840747C007A3B63 /* Main.storyboard in Resources */,
 				C665687918441C09003BF7AB /* icon_download_selected@2x.png in Resources */,
 				C611355C18498CC50019706B /* topik_placeholder_4@2x.png in Resources */,
@@ -1186,7 +1197,8 @@
 		C6A68B8B1840747C007A3B63 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: SAEHYOUNG OH (443LXXJ882)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/leehaining/iOS/work/Topik,
@@ -1196,6 +1208,7 @@
 				INFOPLIST_FILE = "Topik/Topik-Info.plist";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1203,7 +1216,8 @@
 		C6A68B8C1840747C007A3B63 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution: KOREA TOPIK EDUCATION CENTER Co., Ltd. (8QSWJME3AY)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/leehaining/iOS/work/Topik,
@@ -1213,6 +1227,7 @@
 				INFOPLIST_FILE = "Topik/Topik-Info.plist";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

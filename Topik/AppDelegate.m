@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "AppConfig.h"
 #import "Downloader.h"
 #import "DownloadProgress.h"
 
@@ -15,12 +16,13 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    _isDebugMode=true;
     NSLog(@"Appliction didFinishLaunchingWithOptions");
     //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
     self.needLanspace=FALSE;
     [self checkAndUpdateDatabse];
-    Downloader*downloader=[Downloader sharedInstance];
-    [downloader getInterruptedDownloadsAndResume];
+    //Downloader*downloader=[Downloader sharedInstance];
+    //[downloader getInterruptedDownloadsAndResume];
     //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setProgress:) name:kDownloadProgressNotification object:nil];
     return YES;
 }
@@ -51,6 +53,42 @@
         // });
     }];
      **/
+    Downloader*downloader=[Downloader sharedInstance];
+    
+    internetReach=[Reachability reachabilityForInternetConnection];
+    [internetReach startNotifier];
+    NetworkStatus netStatus=[internetReach currentReachabilityStatus];
+    switch(netStatus)
+    {
+        case ReachableViaWiFi:
+        {
+            NSLog(@"Current NetStatus:%@",@"Wifi connected");
+            if(![AppConfig isBackgroundDownloadOn])
+            {
+                if([downloader isDownloading])
+                {
+                    [downloader clearDownloadQueue];
+                }
+            }
+            break;
+        }
+        case ReachableViaWWAN://stop downloading while connected with GPRS/3G
+        {
+            if([downloader isDownloading])
+            {
+                [downloader clearDownloadQueue];
+            }
+            NSLog(@"Current NetStatus:%@",@"WWAN connected");
+            break;
+        }
+        case NotReachable:
+        {
+            NSLog(@"Current NetStatus:%@",@"Not connected");
+            break;
+        }
+        default:
+            break;
+    }
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -63,11 +101,7 @@
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     
     Downloader*downloader=[Downloader sharedInstance];
-    if(![downloader isDownloading])
-    {
-        [downloader clearDownloadQueue];
-        [downloader getInterruptedDownloadsAndResume];
-    }
+    
     internetReach=[Reachability reachabilityForInternetConnection];
     [internetReach startNotifier];
     NetworkStatus netStatus=[internetReach currentReachabilityStatus];
@@ -76,6 +110,11 @@
         case ReachableViaWiFi:
         {
             NSLog(@"Current NetStatus:%@",@"Wifi connected");
+            if(![downloader isDownloading])
+            {
+                [downloader clearDownloadQueue];
+                [downloader getInterruptedDownloadsAndResume];
+            }
             break;
         }
         case ReachableViaWWAN:
@@ -165,6 +204,11 @@
     {
         case ReachableViaWWAN:
         {
+            Downloader*downloader=[Downloader sharedInstance];
+            if([downloader isDownloading])
+            {
+                [downloader clearDownloadQueue];
+            }
             NSLog(@"reachabilityChanged Current NetStatus:%@",@"WWAN connected");
             break;
         }

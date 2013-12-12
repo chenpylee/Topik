@@ -28,3 +28,14 @@
 "Upgrade To View All Featured Lectures"="升级后可查看并下载所有TOPIK特讲内容($5.99)";
 "Restore In-App Purchase"="恢复内购";
 "Rate Us on App Store"="去App Store评价我们";
+"Check Network"="检查网络";
+"Wifi Only"="在线视频只有在Wi-Fi连接时才能播放";
+"3G and continue"="当前网络连接为3G/GPRS，视频播放会产生通信费用。确定要继续播放么？";
+"Abort"="不继续播放";
+"Continue Playing"="继续播放";
+"No Connection"="没有连接到Internet,只能查看已下载的讲座视频。";
+"Download Video:"="下载视频";
+"Do you want to download this video?"="将该视频加入下载列表（只在Wi-Fi连接状态下进行下载）";
+"You can remove this video from download list?"="将该视频从下载列表中移除，并删除已下载的文件";
+"Cancel"="取消";
+"Remove it"="删除";

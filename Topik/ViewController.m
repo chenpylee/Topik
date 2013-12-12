@@ -91,9 +91,14 @@
     NSError *error = [request error];
     NSLog(@"Error:%@",error);
     [self.indicator stopAnimating];
-    //to hide networkActivityIndicator:
-    //[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    [self loadMainApp];
+    UIAlertView *message = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Check Network", nil)
+                                                      message:NSLocalizedString(@"No Connection", nil)
+                                                     delegate:self
+                                            cancelButtonTitle:@"OK"
+                                            otherButtonTitles:nil];
+    message.tag=10;
+    [message show];
+    
 }
 
 -(void)loadMainApp{
@@ -102,5 +107,14 @@
 #pragma mark- parse Json data
 - (void)parseData:(NSData *)responseData {
     [RemoteData processTotalJsonData:responseData];
+}
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(alertView.tag==10)
+    {
+        [self loadMainApp];
+        return;
+    }
 }
 @end

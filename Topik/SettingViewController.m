@@ -13,7 +13,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *network1Label;
 @property (weak, nonatomic) IBOutlet UILabel *network2Label;
 @property (weak, nonatomic) IBOutlet UISwitch *network1Switch;
-@property (weak, nonatomic) IBOutlet UISwitch *network2Switch;
+@property (weak, nonatomic) IBOutlet UISwitch *network2Switch;//background downloading
 - (IBAction)network1ValueChanged:(id)sender;
 - (IBAction)network2ValueChanged:(id)sender;
 
@@ -70,9 +70,13 @@
     // Dispose of any resources that can be recreated.
 }
 -(void) loadSavedSettings{
+    BOOL isBackgroundOn=false;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [self.network1Switch setOn:[defaults objectForKey:kCellularNetwork]];
-    [self.network2Switch setOn:[defaults objectForKey:kBackgroundDownloadSetting]];
+    if([defaults objectForKey:kBackgroundDownloadSetting])
+    {
+        isBackgroundOn=[defaults boolForKey:kBackgroundDownloadSetting];
+    }
+    [self.network2Switch setOn:isBackgroundOn];
 }
 -(void)loadSettingStrings{
     self.network1Label.text=NSLocalizedString(@"4G/3G/2G Data Network", nil);
@@ -93,7 +97,7 @@
     NSInteger rows=1;
     if(section==0)
     {
-        rows=2;
+        rows=1;
     }
     else if(section==1)
     {
@@ -232,7 +236,7 @@
 
 - (IBAction)network2ValueChanged:(id)sender {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setBool:self.network1Switch.on forKey:kBackgroundDownloadSetting];
+    [defaults setBool:self.network2Switch.on forKey:kBackgroundDownloadSetting];
     [defaults synchronize];
 }
 @end

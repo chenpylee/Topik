@@ -28,3 +28,14 @@
 "Upgrade To View All Featured Lectures"="Upgrade To View and Download All Featured Lectures ($5.99)";
 "Restore In-App Purchase"="Restore In-App Purchase";
 "Rate Us on App Store"="Rate Us on App Store";
+"Check Network"="Check Network";
+"Wifi Only"="Online Video is Only Available via Wi-Fi Connection";
+"3G and continue"="You are using cellular data connection. Online video streaming may cost you money. Continue to Play?";
+"Abort"="Abort";
+"Continue Playing"="Continue Playing";
+"No Connection"="No Internet Connection Now. Only Downloaded Lectures are Available.";
+"Download Video:"="Download Video";
+"Do you want to download this video?"="Do you want to download this video?";
+"Cancel"="Cancel";
+"You can remove this video from download list?"="Remove this video from download list and delete the downloaded file?";
+"Remove it"="Remove it";

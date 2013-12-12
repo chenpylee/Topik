@@ -14,4 +14,5 @@
 }
 @property (strong, nonatomic) UIWindow *window;
 @property (nonatomic,assign)BOOL needLanspace;
+@property(nonatomic,assign) BOOL isDebugMode;
 @end

@@ -61,15 +61,23 @@
     {
         _downloadingArray=[[NSMutableArray alloc] init];
         [_downloadingArray removeAllObjects];
-        
+        /**
         NSArray *documentPaths=NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);//NSUserDomainMask: user's home directory --- place to install user's personal items (~)
         NSString *documentsDirectory = [documentPaths objectAtIndex:0];
+        
         _downloadDirectory=[documentsDirectory stringByAppendingString:@"/Lectures"];
         [self createDirectoryIfNotExistAtPath:_downloadDirectory];
         
         _downloadTempDirectory=[documentsDirectory stringByAppendingString:@"/LectureTmp"];
         [self createDirectoryIfNotExistAtPath:_downloadTempDirectory];
+        **/
+        NSString *directoryPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Caches"];
+        _downloadDirectory=[directoryPath stringByAppendingString:@"/Lectures"];
+        [self createDirectoryIfNotExistAtPath:_downloadDirectory];
         
+        _downloadTempDirectory=[directoryPath stringByAppendingString:@"/LectureTmp"];
+        [self createDirectoryIfNotExistAtPath:_downloadTempDirectory];
+
         _downloadingRequestsQueue=[[NSOperationQueue alloc] init];
         _downloadingRequestsQueue.maxConcurrentOperationCount=3;
     }

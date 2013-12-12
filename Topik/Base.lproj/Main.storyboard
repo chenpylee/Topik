@@ -210,6 +210,22 @@
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tuo-iK-bU1">
                                 <rect key="frame" x="20" y="91" width="280" height="161"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4Ci-EE-gMS">
+                                        <rect key="frame" x="16" y="11" width="248" height="140"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7vS-a1-fkh">
+                                        <rect key="frame" x="114" y="54" width="53" height="53"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" backgroundImage="play.png">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="checkAndPlay:" destination="XD1-hz-rrc" eventType="touchUpInside" id="p8E-p6-GHt"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                             </view>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mYv-Qk-6KC">
@@ -230,6 +246,8 @@
                         <outlet property="playlistTableView" destination="2oc-kn-a0V" id="V2X-gS-D6T"/>
                         <outlet property="previewLabel" destination="peA-YI-23E" id="321-wH-DUj"/>
                         <outlet property="titleLabel" destination="13D-SI-bDF" id="m78-kC-0qF"/>
+                        <outlet property="videoImageView" destination="4Ci-EE-gMS" id="UtR-Fn-6BG"/>
+                        <outlet property="videoPlayButton" destination="7vS-a1-fkh" id="T0w-5l-L5V"/>
                         <outlet property="videoSuper" destination="tuo-iK-bU1" id="XpV-lY-rHU"/>
                     </connections>
                 </viewController>
@@ -360,6 +378,22 @@
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ukR-gh-AGK">
                                 <rect key="frame" x="20" y="91" width="280" height="161"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dtb-8l-fTh">
+                                        <rect key="frame" x="16" y="11" width="248" height="140"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dMv-j6-ssK">
+                                        <rect key="frame" x="113" y="55" width="53" height="53"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" image="play.png">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="checkAndPlay:" destination="1Jy-8l-wIL" eventType="touchUpInside" id="TK9-1c-rVH"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                             </view>
                         </subviews>
@@ -370,6 +404,8 @@
                         <outlet property="bookmarkButton" destination="vzE-BM-Mel" id="DfQ-u3-LAR"/>
                         <outlet property="previewLabel" destination="bTF-Qy-5xa" id="pus-qa-f3X"/>
                         <outlet property="titleLabel" destination="rHc-kN-BRb" id="0iW-uG-wjV"/>
+                        <outlet property="videoImageView" destination="dtb-8l-fTh" id="Xe0-Yo-9F9"/>
+                        <outlet property="videoPlayButton" destination="dMv-j6-ssK" id="W1B-aC-AOo"/>
                         <outlet property="videoSuper" destination="ukR-gh-AGK" id="6Z1-YS-lDR"/>
                     </connections>
                 </viewController>
@@ -456,7 +492,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Online Video:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hTN-uQ-VIW">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hTN-uQ-VIW">
                                 <rect key="frame" x="20" y="68" width="300" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -488,6 +524,22 @@
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JoC-Pg-Vpu">
                                 <rect key="frame" x="20" y="91" width="280" height="161"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VBC-nf-Mdn">
+                                        <rect key="frame" x="16" y="11" width="248" height="140"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mtp-sb-eU0">
+                                        <rect key="frame" x="114" y="54" width="53" height="53"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" image="play.png">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="checkAndPlay:" destination="CCb-DU-o0x" eventType="touchUpInside" id="e6W-Nm-wFu"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                             </view>
                         </subviews>
@@ -498,6 +550,8 @@
                         <outlet property="downloadButton" destination="0H2-kk-bkD" id="Mjs-6o-9nR"/>
                         <outlet property="previewLabel" destination="hTN-uQ-VIW" id="ZrF-Nz-aT2"/>
                         <outlet property="titleLabel" destination="Hbq-ST-fMw" id="wPS-pr-Q5J"/>
+                        <outlet property="videoImageView" destination="VBC-nf-Mdn" id="GiF-4F-3gc"/>
+                        <outlet property="videoPlayButton" destination="Mtp-sb-eU0" id="Uvb-NN-PE9"/>
                         <outlet property="videoSuper" destination="JoC-Pg-Vpu" id="M3g-ZI-DUU"/>
                     </connections>
                 </viewController>
@@ -516,31 +570,8 @@
                         <sections>
                             <tableViewSection headerTitle="Network" id="wbp-PX-pvi">
                                 <cells>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="EIY-z8-Aif">
-                                        <rect key="frame" x="0.0" y="119" width="320" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="EIY-z8-Aif" id="ZRN-Oi-8Ik">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="4G/3G/2G Data Network" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nzG-rq-z71">
-                                                    <rect key="frame" x="20" y="11" width="210" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="K4S-PV-OYM">
-                                                    <rect key="frame" x="263" y="6" width="51" height="31"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <connections>
-                                                        <action selector="network1ValueChanged:" destination="ddM-cz-UND" eventType="valueChanged" id="K34-P4-Gls"/>
-                                                    </connections>
-                                                </switch>
-                                            </subviews>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="Xp8-07-pHX">
-                                        <rect key="frame" x="0.0" y="163" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="119" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Xp8-07-pHX" id="AM2-fQ-jyW">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -567,7 +598,7 @@
                             <tableViewSection headerTitle="Upgrade" id="2Yu-aY-bVh">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="Teh-Aw-2U3">
-                                        <rect key="frame" x="0.0" y="255" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="211" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Teh-Aw-2U3" id="9JZ-Ub-X9A">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -583,7 +614,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="BjP-4v-jfT">
-                                        <rect key="frame" x="0.0" y="299" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="255" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="BjP-4v-jfT" id="LT3-G8-Wfo">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -603,7 +634,7 @@
                             <tableViewSection headerTitle="Feedback" id="c13-uP-oWo">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="vTe-M3-PGs">
-                                        <rect key="frame" x="0.0" y="391" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="347" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="vTe-M3-PGs" id="hJf-RY-Kw5">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -629,8 +660,6 @@
                     <navigationItem key="navigationItem" id="Scf-Bn-tXF"/>
                     <connections>
                         <outlet property="feedback1Label" destination="YXW-b6-Ayb" id="8qw-QA-5N0"/>
-                        <outlet property="network1Label" destination="nzG-rq-z71" id="dc2-oM-vrN"/>
-                        <outlet property="network1Switch" destination="K4S-PV-OYM" id="8S4-fV-ofz"/>
                         <outlet property="network2Label" destination="hen-iR-6hI" id="L4g-TB-LTe"/>
                         <outlet property="network2Switch" destination="MQt-zP-M5I" id="gYp-dh-jRd"/>
                         <outlet property="upgrade1Label" destination="Gj6-TI-yoL" id="aIF-pX-uIF"/>
@@ -704,6 +733,22 @@
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aO3-L6-pU3">
                                 <rect key="frame" x="20" y="91" width="280" height="161"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Hqm-Mj-JVr">
+                                        <rect key="frame" x="12" y="11" width="248" height="140"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a6u-MJ-NBF">
+                                        <rect key="frame" x="109" y="55" width="53" height="53"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" image="play.png">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="checkAndPlay:" destination="6vy-xn-Qhx" eventType="touchUpInside" id="7JB-xd-6vF"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                             </view>
                         </subviews>
@@ -714,6 +759,8 @@
                         <outlet property="downloadButton" destination="DzI-gf-RiS" id="XmD-vS-dO0"/>
                         <outlet property="previewLabel" destination="P8Z-ly-OXu" id="Wqg-KK-MbH"/>
                         <outlet property="titleLabel" destination="uer-BG-ikx" id="wPZ-Vb-qsH"/>
+                        <outlet property="videoImageView" destination="Hqm-Mj-JVr" id="UlE-mV-kVK"/>
+                        <outlet property="videoPlayButton" destination="a6u-MJ-NBF" id="Vsk-x5-aHU"/>
                         <outlet property="videoSuper" destination="aO3-L6-pU3" id="Eai-Bb-J4o"/>
                     </connections>
                 </viewController>
@@ -833,6 +880,7 @@
         <image name="icon_download_selected.png" width="35" height="35"/>
         <image name="icon_download_unselected.png" width="35" height="35"/>
         <image name="icon_video.png" width="16" height="16"/>
+        <image name="play.png" width="53" height="53"/>
         <image name="setting.png" width="30" height="30"/>
         <image name="star.png" width="30" height="30"/>
     </resources>

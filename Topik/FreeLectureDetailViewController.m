@@ -55,16 +55,14 @@
     [super viewWillAppear:animated];
     [self updateBookmarkButton];
     [self setupVideoPlay];
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Free Lecture Detail"];
+    [tracker send:[[GAIDictionaryBuilder createAppView] build]];
     
 }
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-    if(player)
-    {
-        [player.moviePlayer stop];
-        [player.moviePlayer.view removeFromSuperview];
-    }
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
 }
 
 

@@ -164,6 +164,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setProgress:) name:kDownloadProgressNotification object:nil];
 }
 -(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
     [self updateDownloadButton];
     [self updateBookmarkButton];
     
@@ -172,16 +173,21 @@
     [self updateProgressDataFromDB];
     [playlistTableView reloadData];
     //register DownloadProgressNotification
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Featured Lecture Detail"];
+    [tracker send:[[GAIDictionaryBuilder createAppView] build]];
     
 }
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
+    /**
     if(player)
     {
         [player.moviePlayer stop];
         [player.moviePlayer.view removeFromSuperview];
     }
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+     **/
+    
 }
 - (void)didReceiveMemoryWaning
 {
@@ -421,10 +427,22 @@
     return cell;
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    self.selectedVideoIndex=indexPath.row;
-    [self performSegueWithIdentifier:@"FeaturedVideoDetailSegue" sender:self];
+    if([[NSUserDefaults standardUserDefaults] boolForKey:kStoreProductIdentifier])
+    {
+        self.selectedVideoIndex=indexPath.row;
+        [self performSegueWithIdentifier:@"FeaturedVideoDetailSegue" sender:self];
+    }
+    else
+    {
+        [self showAccessAlert];
+    }
+    
 }
-
+-(void)showAccessAlert{
+    UIAlertView* failAlert=[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Unlock Featured Lectures:", nil) message:NSLocalizedString(@"unlock only", nil) delegate:nil cancelButtonTitle:@"OK"
+                                            otherButtonTitles:nil, nil];
+    [failAlert show];
+}
 - (IBAction)updateBookmark:(id)sender {
     [self insertBookMark:self.lecture];
 }

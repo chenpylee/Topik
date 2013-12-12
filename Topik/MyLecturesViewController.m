@@ -88,6 +88,9 @@
         tableFrame=CGRectMake(tableFrame.origin.x, tableFrame.origin.y, tableFrame.size.width, 323);
     }
     self.tableview.frame=tableFrame;
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"My Lecture List"];
+    [tracker send:[[GAIDictionaryBuilder createAppView] build]];
 }
 -(void)viewWillDisappear:(BOOL)animated
 {

@@ -8,8 +8,13 @@
 
 #import "SettingViewController.h"
 #import "AppConfig.h"
+#import "AppDelegate.h"
+#import "TopikIAPHelper.h"
 
 @interface SettingViewController ()
+{
+    BOOL isPurchased;
+}
 @property (weak, nonatomic) IBOutlet UILabel *network1Label;
 @property (weak, nonatomic) IBOutlet UILabel *network2Label;
 @property (weak, nonatomic) IBOutlet UISwitch *network1Switch;
@@ -31,6 +36,7 @@
     self = [super initWithStyle:style];
     if (self) {
         // Custom initialization
+        isPurchased=false;
     }
     return self;
 }
@@ -63,7 +69,116 @@
     [self loadSettingStrings];
     [self loadSavedSettings];
 }
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(productInforUpdated:) name:KStoreProductInforNotificationIdentifier object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(completeTransaction:) name:kStoreProductCompleteTransactionNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restoreTransaction:) name:kStoreProductRestoreTransactionNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(failTransaction:) name:kStoreProductFailTransactionNotification object:nil];
+    [self updateProductInfor];
+    
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Setting"];
+    [tracker send:[[GAIDictionaryBuilder createAppView] build]];
+}
 
+-(void)completeTransaction:(NSNotification*)notification{
+    [self updateProductInfor];
+    UIAlertView* restoreOkAlert=[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Unlock Featured Lectures:", nil) message:NSLocalizedString(@"Purchase Restored", nil) delegate:nil cancelButtonTitle:@"OK"
+                                                 otherButtonTitles:nil, nil];
+    [restoreOkAlert show];
+}
+-(void)restoreTransaction:(NSNotification*)notification{
+    [self updateProductInfor];
+    if([[NSUserDefaults standardUserDefaults] boolForKey:kStoreProductIdentifier])
+    {
+        UIAlertView* restoreOkAlert=[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Unlock Featured Lectures:", nil) message:NSLocalizedString(@"Purchase Restored", nil) delegate:nil cancelButtonTitle:@"OK"
+                                                     otherButtonTitles:nil, nil];
+        [restoreOkAlert show];
+    }
+    else
+    {
+        UIAlertView* restoreFailAlert=[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Unlock Featured Lectures:", nil) message:NSLocalizedString(@"Purchase Restored But", nil) delegate:nil cancelButtonTitle:@"OK"
+                                                       otherButtonTitles:nil, nil];
+        [restoreFailAlert show];
+    }
+}
+-(void)failTransaction:(NSNotification*)notification{
+    [self updateProductInfor];
+    NSDictionary *userInfo=notification.userInfo;
+    if([userInfo objectForKey:kStoreProductFailErrorKey])
+    {
+        UIAlertView* failAlert=[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Unlock Featured Lectures:", nil) message:[userInfo objectForKey:kStoreProductFailErrorKey] delegate:nil cancelButtonTitle:@"OK"
+                                                otherButtonTitles:nil, nil];
+        [failAlert show];
+    }
+    else
+    {
+        UIAlertView* failAlert=[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Unlock Featured Lectures:", nil) message:NSLocalizedString(@"Can not connect to the App Store", nil) delegate:nil cancelButtonTitle:@"OK"
+                                                otherButtonTitles:nil, nil];
+        [failAlert show];
+    }
+}
+
+-(void)productInforUpdated:(NSNotification*)notification{
+    [self updateProductInfor];
+}
+-(void)updateProductInfor{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *upgradeString=NSLocalizedString(@"Upgrade To View All Featured Lectures", nil);
+    if([defaults objectForKey:kStoreProductTitle])
+    {
+        NSString *productTitle=[defaults objectForKey:kStoreProductTitle];
+        NSString *productPriceString=[defaults objectForKey:kStoreProductPrice];
+        upgradeString=[NSString stringWithFormat:@"%@ %@",upgradeString,productPriceString];
+    }
+    isPurchased = [[NSUserDefaults standardUserDefaults] boolForKey:kStoreProductIdentifier];
+    
+    if(isPurchased)
+    {
+        NSString *rawString=[NSString stringWithFormat:@"%@ (%@)",upgradeString,NSLocalizedString(@"unlocked", nil)];
+        NSMutableAttributedString *attString =
+        [[NSMutableAttributedString alloc]
+         initWithString: rawString];
+        
+        [attString addAttribute: NSForegroundColorAttributeName
+                          value: [UIColor grayColor]
+                          range: NSMakeRange(0,rawString.length)];
+        
+        
+        [attString addAttribute: NSFontAttributeName
+                          value:  [UIFont fontWithName:@"Helvetica" size:15]
+                          range: NSMakeRange(0,rawString.length)];
+        self.upgrade1Label.attributedText=attString;
+        
+        
+        NSString *rawString1=[NSString stringWithFormat:@"%@",NSLocalizedString(@"Restore In-App Purchase", nil)];
+        NSMutableAttributedString *attString1 =
+        [[NSMutableAttributedString alloc]
+         initWithString: rawString1];
+        
+        [attString1 addAttribute: NSForegroundColorAttributeName
+                          value: [UIColor grayColor]
+                          range: NSMakeRange(0,rawString1.length)];
+        
+        
+        [attString1 addAttribute: NSFontAttributeName
+                          value:  [UIFont fontWithName:@"Helvetica" size:15]
+                          range: NSMakeRange(0,rawString1.length)];
+        self.upgrade2Label.attributedText=attString1;
+    }
+    else
+    {
+        self.upgrade1Label.text=upgradeString;
+    }
+}
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -81,7 +196,7 @@
 -(void)loadSettingStrings{
     self.network1Label.text=NSLocalizedString(@"4G/3G/2G Data Network", nil);
     self.network2Label.text=NSLocalizedString(@"Background Downloading", nil);
-    self.upgrade1Label.text=NSLocalizedString(@"Upgrade To View All Featured Lectures", nil);
+    //self.upgrade1Label.text=NSLocalizedString(@"Upgrade To View All Featured Lectures", nil);
     self.upgrade2Label.text=NSLocalizedString(@"Restore In-App Purchase", nil);
     self.feedback1Label.text=NSLocalizedString(@"Rate Us on App Store", nil);
 }
@@ -142,22 +257,88 @@
     if(indexPath.section==1&&indexPath.row==0)
     {
         //click to review
-        [self upgrade];
+        if(!isPurchased)
+        {
+            [self upgrade];
+        }
+        else
+        {
+            [self showAlreadyUnlockedMsg];
+
+        }
         
     }
     if(indexPath.section==1&&indexPath.row==1)
     {
         //click to review
-        [self restore];
+        if(!isPurchased)
+        {
+            [self restore];
+        }
+        else
+        {
+            [self showAlreadyUnlockedMsg];
+        }
         
     }
     
 }
+-(void)showAlreadyUnlockedMsg{
+    UIAlertView* addAlert=[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Unlock Featured Lectures:", nil) message:NSLocalizedString(@"Already Unlocked", nil) delegate:nil cancelButtonTitle:@"OK"
+        otherButtonTitles:nil, nil];
+    [addAlert show];
+}
 -(void)upgrade{
     NSLog(@"Upgrade");
+    AppDelegate *appDelegate=[[UIApplication sharedApplication] delegate];
+    SKProduct *product =appDelegate.product;
+    if(product)
+    {
+        NSLog(@"Buying %@...", product.productIdentifier);
+        [[TopikIAPHelper sharedInstance] buyProduct:product];
+    }
+    else
+    {
+        [self showFailMsg];
+    }
+
 }
+-(void) showFailMsg{
+    /**
+    [[TopikIAPHelper sharedInstance] requestProductsWithCompletionHandler:^(BOOL success, NSArray *products) {
+        if (success) {
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            for(SKProduct *product in products)
+            {
+                NSLog(@"product:%@",product.localizedDescription);
+                if([product.productIdentifier isEqualToString:kStoreProductIdentifier])
+                {
+                    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+                    [numberFormatter setFormatterBehavior:NSNumberFormatterBehavior10_4];
+                    [numberFormatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+                    [numberFormatter setLocale:product.priceLocale];
+                    //NSString *symbol = [product.priceLocale objectForKey:NSLocaleCurrencySymbol];
+                    NSString *currencyString = [NSString stringWithFormat:@"%@",[numberFormatter stringFromNumber:product.price]];
+                    [defaults setValue:product.localizedTitle forKey:kStoreProductTitle];
+                    [defaults setValue:product.localizedDescription forKey:kStoreProductDescription];
+                    [defaults setValue:currencyString forKey:kStoreProductPrice];
+                    //[defaults setValue:product forKey:kStoreProductObject];
+                }
+            }
+            [defaults synchronize];
+            [[NSNotificationCenter defaultCenter] postNotificationName:KStoreProductInforNotificationIdentifier object:self];
+        }
+    }];
+     **/
+    UIAlertView* addAlert=[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Unlock Featured Lectures:", nil) message:NSLocalizedString(@"Can not connect to the App Store", nil) delegate:nil cancelButtonTitle:@"OK"
+                                           otherButtonTitles:nil, nil];
+    [addAlert show];
+    
+}
+
 -(void)restore{
     NSLog(@"restore");
+    [[TopikIAPHelper sharedInstance] restoreCompletedTransactions];
 }
 -(void)goToAppStore{
     //[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms://itunes.com/apps/com.TopikKorea.Topik"]];

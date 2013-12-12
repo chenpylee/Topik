@@ -10,6 +10,7 @@
 #import "AppConfig.h"
 #import "Downloader.h"
 #import "DownloadProgress.h"
+#import "GAI.h"
 
 @implementation AppDelegate
 
@@ -24,12 +25,55 @@
     //Downloader*downloader=[Downloader sharedInstance];
     //[downloader getInterruptedDownloadsAndResume];
     //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setProgress:) name:kDownloadProgressNotification object:nil];
+    _product=nil;
+    
+   [TopikIAPHelper sharedInstance];
+    
+    [[TopikIAPHelper sharedInstance] requestProductsWithCompletionHandler:^(BOOL success, NSArray *products) {
+        if (success) {
+             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            for(SKProduct *product in products)
+            {
+                NSLog(@"product:%@",product.localizedDescription);
+                if([product.productIdentifier isEqualToString:kStoreProductIdentifier])
+                {
+                    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+                    [numberFormatter setFormatterBehavior:NSNumberFormatterBehavior10_4];
+                    [numberFormatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+                    [numberFormatter setLocale:product.priceLocale];
+                    //NSString *symbol = [product.priceLocale objectForKey:NSLocaleCurrencySymbol];
+                    NSString *currencyString = [NSString stringWithFormat:@"%@",[numberFormatter stringFromNumber:product.price]];
+                    [defaults setValue:product.localizedTitle forKey:kStoreProductTitle];
+                    [defaults setValue:product.localizedDescription forKey:kStoreProductDescription];
+                    [defaults setValue:currencyString forKey:kStoreProductPrice];
+                    //[defaults setValue:product forKey:kStoreProductObject];
+                    _product=product;
+                }
+            }
+            [defaults synchronize];
+            [[NSNotificationCenter defaultCenter] postNotificationName:KStoreProductInforNotificationIdentifier object:self];
+        }
+    }];
+    
+    
+    // Optional: automatically send uncaught exceptions to Google Analytics.
+    [GAI sharedInstance].trackUncaughtExceptions = YES;
+    
+    // Optional: set Google Analytics dispatch interval to e.g. 20 seconds.
+    [GAI sharedInstance].dispatchInterval = 20;
+    
+    // Optional: set Logger to VERBOSE for debug information.
+    [[[GAI sharedInstance] logger] setLogLevel:kGAILogLevelVerbose];
+    
+    // Initialize tracker.
+    id<GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:@"UA-46392188-1"];
+    
     return YES;
 }
 -(void)setProgress:(NSNotification *) notification
 {
-    DownloadProgress *progress=(DownloadProgress*)[notification.userInfo objectForKey:@"progress"];
-    NSLog(@"Progress Updated:%f",progress.progressInFloat);
+    //DownloadProgress *progress=(DownloadProgress*)[notification.userInfo objectForKey:@"progress"];
+    //NSLog(@"Progress Updated:%f",progress.progressInFloat);
 }
 - (void)applicationWillResignActive:(UIApplication *)application
 {
@@ -41,7 +85,7 @@
 {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-    NSLog(@"applicationDidEnterBackground");
+    //NSLog(@"applicationDidEnterBackground");
     /**
     UIApplication* app = [UIApplication sharedApplication];
     
@@ -209,17 +253,17 @@
             {
                 [downloader clearDownloadQueue];
             }
-            NSLog(@"reachabilityChanged Current NetStatus:%@",@"WWAN connected");
+            //NSLog(@"reachabilityChanged Current NetStatus:%@",@"WWAN connected");
             break;
         }
         case ReachableViaWiFi:
         {
-            NSLog(@"reachabilityChanged Current NetStatus:%@",@"WiFi connected");
+            //NSLog(@"reachabilityChanged Current NetStatus:%@",@"WiFi connected");
             break;
         }
         case NotReachable:
         {
-            NSLog(@"reachabilityChanged Current NetStatus:%@",@"Not connected");
+            //NSLog(@"reachabilityChanged Current NetStatus:%@",@"Not connected");
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Alert" message:@"We are unable to make a internet connection at this time. Some functionality will be limited until a connection is made." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
             [alert show];
             break;

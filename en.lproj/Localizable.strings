@@ -5,6 +5,15 @@
   Created by Lee Haining on 13-11-25.
   Copyright (c) 2013年 RotateMediaLabs. All rights reserved.
 */
+"unlock"="UNLOCK";
+"unlocked"="UNLOCKED";
+"Unlock Featured Lectures:"="Unlock Featured Lectures:";
+"Can not connect to the App Store"="Can not connect to the App Store, please try again later";
+"Unlock Done"="Successfully unlocked the TOPIK Featured Lectures ";
+"unlock only"="Unlock Featured Lectures First.";
+"Already Unlocked"="Already Unlocked";
+"Purchase Restored"="Purchase Restored";
+"Purchase Restored But"="You haven't purchased it before.";
 "Featured Lectures" = "Featured Lectures";
 "Detail"="Lecture Detail";
 "Sample"="Sample Video";
@@ -25,7 +34,7 @@
 "Feedback"="Feedback";
 "4G/3G/2G Data Network"="4G/3G/2G Data Network";
 "Background Downloading"="Background Downloading";
-"Upgrade To View All Featured Lectures"="Upgrade To View and Download All Featured Lectures ($5.99)";
+"Upgrade To View All Featured Lectures"="Unlock Featured Lectures ";
 "Restore In-App Purchase"="Restore In-App Purchase";
 "Rate Us on App Store"="Rate Us on App Store";
 "Check Network"="Check Network";

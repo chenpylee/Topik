@@ -11,6 +11,7 @@
 #import "AppConfig.h"
 #import "RemoteData.h"
 
+
 @interface ViewController ()
 @property IBOutlet UIActivityIndicatorView* indicator;
 -(IBAction) loadData:(id)sender;
@@ -40,6 +41,12 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Loading Screen"];
+    [tracker send:[[GAIDictionaryBuilder createAppView] build]];
+}
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
@@ -61,6 +68,7 @@
     [request startAsynchronous];
     NSLog(@"--------------------------------------------------");
     NSLog(@"Start Downloading from %@...",[url absoluteString]);
+    
     /**
     //to show:
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;

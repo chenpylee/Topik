@@ -55,15 +55,14 @@
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self updateDownloadButton];
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Featured Lecture Video Detail"];
+    [tracker send:[[GAIDictionaryBuilder createAppView] build]];
     
 }
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-    if(player)
-    {
-        [player.moviePlayer stop];
-        [player.moviePlayer.view removeFromSuperview];
-    }
+   
 }
 
 -(void) setupVideoPlay{

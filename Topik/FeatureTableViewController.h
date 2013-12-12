@@ -14,4 +14,6 @@
 @property(nonatomic,strong)NSMutableArray *lectures;
 @property(nonatomic,weak)UIActivityIndicatorView *activityIndicator;
 @property(nonatomic,assign)NSInteger lang_id;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *unlockBtn;
+- (IBAction)buyProduct:(id)sender;
 @end

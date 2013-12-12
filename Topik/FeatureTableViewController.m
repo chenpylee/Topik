@@ -13,6 +13,8 @@
 #import "FeaturedCellView.h"
 #import "FeaturedDetailViewController.h"
 #import "UIImageView+WebCache.h"
+#import "TopikIAPHelper.h"
+#import "AppDelegate.h"
 @interface FeatureTableViewController ()
 @property(nonatomic,strong)UIView* selectedBackgroundView;
 @property(nonatomic,strong)UIView* selectedBackgroundViewLv1;
@@ -55,9 +57,10 @@
     self.navigationController.navigationBar.titleTextAttributes = textAttributes;
     //self.navigationController.title=@"nav title";
     /**
-    UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refreshTable)];
+    UIBarButtonItem *unlockButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refreshTable)];
     self.navigationItem.rightBarButtonItem = refreshButton;
      **/
+    
     self.navigationItem.title=NSLocalizedString(@"Featured Lectures", nil);
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
@@ -83,8 +86,149 @@
     self.placeHolderLv4=[UIImage imageNamed:@"topik_placeholder_4.png"];
     [self.tableView setSeparatorInset:UIEdgeInsetsZero];
     //self.selectedBackgroundView.layer.cornerRadius = 5;
-
+    self.unlockBtn.enabled=false;
+    self.unlockBtn.title=@"";
     
+}
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self updateUnlockButton];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(productInforUpdated:) name:KStoreProductInforNotificationIdentifier object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(completeTransaction:) name:kStoreProductCompleteTransactionNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restoreTransaction:) name:kStoreProductRestoreTransactionNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(failTransaction:) name:kStoreProductFailTransactionNotification object:nil];
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Featured Lecture List"];
+    [tracker send:[[GAIDictionaryBuilder createAppView] build]];
+    
+}
+-(void)completeTransaction:(NSNotification*)notification{
+    [self updateUnlockButton];
+    UIAlertView* restoreOkAlert=[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Unlock Featured Lectures:", nil) message:NSLocalizedString(@"Purchase Restored", nil) delegate:nil cancelButtonTitle:@"OK"
+                                                 otherButtonTitles:nil, nil];
+    [restoreOkAlert show];
+}
+-(void)restoreTransaction:(NSNotification*)notification{
+    [self updateUnlockButton];
+    
+    if([[NSUserDefaults standardUserDefaults] boolForKey:kStoreProductIdentifier])
+    {
+        UIAlertView* restoreOkAlert=[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Unlock Featured Lectures:", nil) message:NSLocalizedString(@"Purchase Restored", nil) delegate:nil cancelButtonTitle:@"OK"
+                                            otherButtonTitles:nil, nil];
+        [restoreOkAlert show];
+    }
+    else
+    {
+        UIAlertView* restoreFailAlert=[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Unlock Featured Lectures:", nil) message:NSLocalizedString(@"Purchase Restored But", nil) delegate:nil cancelButtonTitle:@"OK"
+                                                     otherButtonTitles:nil, nil];
+        [restoreFailAlert show];
+    }
+}
+-(void)failTransaction:(NSNotification*)notification{
+    if(!notification.userInfo)
+    {
+        UIAlertView* failAlert=[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Unlock Featured Lectures:", nil) message:NSLocalizedString(@"Can not connect to the App Store", nil) delegate:nil cancelButtonTitle:@"OK"
+                                                otherButtonTitles:nil, nil];
+        [failAlert show];
+        return;
+    }
+    NSDictionary *userInfo=notification.userInfo;
+    if([userInfo objectForKey:kStoreProductFailErrorKey])
+    {
+        UIAlertView* failAlert=[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Unlock Featured Lectures:", nil) message:[userInfo objectForKey:kStoreProductFailErrorKey] delegate:nil cancelButtonTitle:@"OK"
+                                               otherButtonTitles:nil, nil];
+        [failAlert show];
+    }
+    else
+    {
+        UIAlertView* failAlert=[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Unlock Featured Lectures:", nil) message:NSLocalizedString(@"Can not connect to the App Store", nil) delegate:nil cancelButtonTitle:@"OK"
+                                                otherButtonTitles:nil, nil];
+        [failAlert show];
+    }
+}
+-(void)productInforUpdated:(NSNotification*)notification{
+    [self updateUnlockButton];
+}
+-(void)updateUnlockButton{
+    if([[NSUserDefaults standardUserDefaults] boolForKey:kStoreProductIdentifier])
+    {
+            self.unlockBtn.enabled=false;
+            self.unlockBtn.title=NSLocalizedString(@"unlocked", nil);
+            return;
+    }
+    
+    AppDelegate *appDelegate=[[UIApplication sharedApplication] delegate];
+    SKProduct *product =appDelegate.product;
+    if(product)
+    {
+        self.unlockBtn.title=NSLocalizedString(@"unlock", nil);
+        BOOL productPurchased = [[NSUserDefaults standardUserDefaults] boolForKey:kStoreProductIdentifier];
+        if(productPurchased)
+        {
+            self.unlockBtn.title=NSLocalizedString(@"unlocked", nil);
+        }
+        [self.unlockBtn setEnabled:!productPurchased];
+    }
+    else
+    {
+        self.unlockBtn.enabled=true;
+        self.unlockBtn.title=NSLocalizedString(@"unlock", nil);
+    }
+
+}
+
+- (IBAction)buyProduct:(id)sender {
+    AppDelegate *appDelegate=[[UIApplication sharedApplication] delegate];
+    SKProduct *product =appDelegate.product;
+    if(product)
+    {
+        NSLog(@"Buying %@...", product.productIdentifier);
+        [[TopikIAPHelper sharedInstance] buyProduct:product];
+    }
+    else
+    {
+        [self showFailMsg];
+    }
+}
+-(void) showFailMsg{
+    /**
+    [[TopikIAPHelper sharedInstance] requestProductsWithCompletionHandler:^(BOOL success, NSArray *products) {
+        if (success) {
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            for(SKProduct *product in products)
+            {
+                NSLog(@"product:%@",product.localizedDescription);
+                if([product.productIdentifier isEqualToString:kStoreProductIdentifier])
+                {
+                    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+                    [numberFormatter setFormatterBehavior:NSNumberFormatterBehavior10_4];
+                    [numberFormatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+                    [numberFormatter setLocale:product.priceLocale];
+                    //NSString *symbol = [product.priceLocale objectForKey:NSLocaleCurrencySymbol];
+                    NSString *currencyString = [NSString stringWithFormat:@"%@",[numberFormatter stringFromNumber:product.price]];
+                    [defaults setValue:product.localizedTitle forKey:kStoreProductTitle];
+                    [defaults setValue:product.localizedDescription forKey:kStoreProductDescription];
+                    [defaults setValue:currencyString forKey:kStoreProductPrice];
+                    //[defaults setValue:product forKey:kStoreProductObject];
+                }
+            }
+            [defaults synchronize];
+            [[NSNotificationCenter defaultCenter] postNotificationName:KStoreProductInforNotificationIdentifier object:self];
+        }
+    }];
+     **/
+    UIAlertView* addAlert=[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Unlock Featured Lectures:", nil) message:NSLocalizedString(@"Can not connect to the App Store", nil) delegate:nil cancelButtonTitle:@"OK"
+                                           otherButtonTitles:nil, nil];
+    [addAlert show];
+
+}
+-(void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 -(void)refreshTable{
     if(self.lectures.count>0)
@@ -266,5 +410,6 @@
 - (void)parseData:(NSData *)responseData {
     [RemoteData processTotalJsonData:responseData];
 }
+
 
 @end

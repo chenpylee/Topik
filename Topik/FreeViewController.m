@@ -31,7 +31,12 @@
     }
     return self;
 }
-
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Free Lecture List"];
+    [tracker send:[[GAIDictionaryBuilder createAppView] build]];
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];

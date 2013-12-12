@@ -125,14 +125,21 @@
                             </tableViewCell>
                         </prototypes>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Title" id="xTX-7H-r33"/>
+                    <navigationItem key="navigationItem" title="Title" id="xTX-7H-r33">
+                        <barButtonItem key="rightBarButtonItem" title="UNLOCK" id="ZZb-wc-4dL">
+                            <connections>
+                                <action selector="buyProduct:" destination="DCG-AD-fzx" id="dD0-xP-sXJ"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
+                        <outlet property="unlockBtn" destination="ZZb-wc-4dL" id="1eh-zL-XAy"/>
                         <segue destination="XD1-hz-rrc" kind="push" identifier="FeaturedDetailSegue" id="riN-rp-H1X"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AXb-Ea-Igm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1226" y="195"/>
+            <point key="canvasLocation" x="1118" y="143"/>
         </scene>
         <!--Featured Detail View Controller-->
         <scene sceneID="qbE-Vr-GnL">

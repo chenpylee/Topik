@@ -5,6 +5,15 @@
   Created by Lee Haining on 13-11-25.
   Copyright (c) 2013年 RotateMediaLabs. All rights reserved.
 */
+"unlock"="解锁";
+"unlocked"="已解锁";
+"Unlock Featured Lectures:"="解锁TOPIK特讲:";
+"Already Unlocked"="已经解锁";
+"unlock only"="快去解锁TOPIK特讲吧！海量真题讲解视频同步更新！";
+"Unlock Done"="成功解锁";
+"Purchase Restored"="恢复购买成功。TOPIK特讲已解锁";
+"Purchase Restored But"="您以前并未曾购买过TOPIK特讲";
+"Can not connect to the App Store"="连接App Store时发生错误，稍后再试";
 "Featured Lectures" = "TOPIK真题特讲";
 "Detail"="本讲内容";
 "Sample Video"="预览";
@@ -25,7 +34,7 @@
 "Feedback"="反馈";
 "4G/3G/2G Data Network"="4G/3G/2G 蜂窝网络";
 "Background Downloading"="后台下载";
-"Upgrade To View All Featured Lectures"="升级后可查看并下载所有TOPIK特讲内容($5.99)";
+"Upgrade To View All Featured Lectures"="解锁TOPIK考试真题特讲";
 "Restore In-App Purchase"="恢复内购";
 "Rate Us on App Store"="去App Store评价我们";
 "Check Network"="检查网络";

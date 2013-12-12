@@ -53,15 +53,13 @@
 }
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Download Video Detail"];
+    [tracker send:[[GAIDictionaryBuilder createAppView] build]];
 }
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-    if(player)
-    {
-        [player.moviePlayer stop];
-        [player.moviePlayer.view removeFromSuperview];
-    }
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
 }
 -(void) setupVideoPlay{
     self.lecture=[RemoteData getFeaturedLectureByLectureID:self.selectedVideo.lecture_id];
@@ -241,7 +239,7 @@
 
 -(void)dealloc{
     NSLog(@"FeaturedVideoDetailViewController dealloc+++++++++++++++++++++");
-    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 -(void)insertDownload{
